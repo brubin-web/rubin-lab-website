@@ -1,0 +1,85 @@
+name: Handle Publication Approval
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  handle-approval:
+    # Only run on issues with the 'publication' label
+    if: |
+      github.event.issue.pull_request == null &&
+      contains(github.event.issue.labels.*.name, 'publication') &&
+      (contains(github.event.comment.body, '/approve') || contains(github.event.comment.body, '/reject'))
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Process approval command
+        id: process
+        working-directory: scripts
+        env:
+          ISSUE_COMMENT: ${{ github.event.comment.body }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: node approve-publication.js
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add data/publications.json
+          git commit -m "Update publications: ${{ steps.process.outputs.action }} publication
+
+          Issue: #${{ github.event.issue.number }}
+          Title: ${{ steps.process.outputs.title }}"
+          git push
+
+      - name: Close issue on approval
+        if: contains(github.event.comment.body, '/approve')
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              state: 'closed',
+              labels: ['publication', 'approved']
+            });
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: '✅ Publication approved and added to the website. The changes will be visible shortly.'
+            });
+
+      - name: Close issue on rejection
+        if: contains(github.event.comment.body, '/reject')
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              state: 'closed',
+              labels: ['publication', 'rejected']
+            });
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: '❌ Publication rejected. It will not appear on the website and won\'t be suggested again.'
+            });

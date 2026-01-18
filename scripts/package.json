@@ -1,0 +1,14 @@
+{
+  "name": "rubin-lab-scripts",
+  "version": "1.0.0",
+  "description": "Scripts for automating Rubin Lab website publication updates",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "check-publications": "node fetch-publications.js",
+    "approve-publication": "node approve-publication.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

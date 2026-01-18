@@ -1,0 +1,164 @@
+{
+  "lastUpdated": "2026-01-18T00:00:00Z",
+  "orcidId": "0000-0001-8684-2417",
+  "approved": [
+    {
+      "id": "pub-2026-001",
+      "title": "Identification of proteins influencing CRISPR-associated transposases for enhanced genome editing",
+      "authors": "Song LCT, Alker ATP, Oromí-Bosch A, Swartz SE, Martinson JNV, Arora J, Wang AM, Rovinsky R, Smith SJ, Pierce EC, Deutschbauer AM, Doudna JA, Cress BF, Rubin BE",
+      "journal": "Science Advances",
+      "year": 2026,
+      "doi": "10.1126/sciadv.aea1429",
+      "pmid": "41477825",
+      "links": {
+        "paper": "https://doi.org/10.1126/sciadv.aea1429"
+      }
+    },
+    {
+      "id": "pub-2025-001",
+      "title": "Generating functional plasmid origins with OriGen",
+      "authors": "Irvine J, Martinson JNV, Arora J, Hasham SI, Patel JR, Qi ET, Cress BF, Rubin BE",
+      "journal": "Nucleic Acids Research",
+      "year": 2025,
+      "doi": "10.1093/nar/gkaf1198",
+      "pmid": "41325770",
+      "links": {
+        "paper": "https://doi.org/10.1093/nar/gkaf1198"
+      }
+    },
+    {
+      "id": "pub-2023-001",
+      "title": "Infant microbiome cultivation and metagenomic analysis reveal Bifidobacterium 2'-fucosyllactose utilization can be facilitated by coexisting species",
+      "authors": "Lou YC, Rubin BE, Schoelmerich MC, DiMarco KS, Borges AL, Rovinsky R, Song L, Doudna JA, Banfield JF",
+      "journal": "Nature Communications",
+      "year": 2023,
+      "doi": "10.1038/s41467-023-43279-y",
+      "pmid": "37973815",
+      "links": {
+        "paper": "https://doi.org/10.1038/s41467-023-43279-y"
+      }
+    },
+    {
+      "id": "pub-2022-001",
+      "title": "Species- and site-specific genome editing in complex bacterial communities",
+      "authors": "Rubin BE, Diamond S, Cress BF, Crits-Christoph A, Lou YC, Borges AL, Shivram H, He C, Xu M, Zhou Z, Smith SJ, Rovinsky R, Smock DCJ, Tang K, Owens TK, Krishnappa N, Sachdeva R, Barrangou R, Deutschbauer AM, Banfield JF, Doudna JA",
+      "journal": "Nature Microbiology",
+      "year": 2022,
+      "doi": "10.1038/s41564-021-01014-7",
+      "pmid": "34873292",
+      "links": {
+        "paper": "https://doi.org/10.1038/s41564-021-01014-7"
+      }
+    },
+    {
+      "id": "pub-2020-001",
+      "title": "The circadian clock and darkness control natural competence in cyanobacteria",
+      "authors": "Taton A, Erikson C, Yang Y, Rubin BE, Rifkin SA, Golden JW, Golden SS",
+      "journal": "Nature Communications",
+      "year": 2020,
+      "doi": "10.1038/s41467-020-15384-9",
+      "pmid": "32245943",
+      "links": {
+        "paper": "https://doi.org/10.1038/s41467-020-15384-9"
+      }
+    },
+    {
+      "id": "pub-2019-001",
+      "title": "A Hard Day's Night: Cyanobacteria in Diel Cycles",
+      "authors": "Welkie DG, Rubin BE, Diamond S, Hood RD, Savage DF, Golden SS",
+      "journal": "Trends in Microbiology",
+      "year": 2019,
+      "doi": "10.1016/j.tim.2018.11.002",
+      "pmid": "30527541",
+      "links": {
+        "paper": "https://doi.org/10.1016/j.tim.2018.11.002"
+      }
+    },
+    {
+      "id": "pub-2018-001",
+      "title": "Genome-wide fitness assessment during diurnal growth reveals an expanded role of the cyanobacterial circadian clock protein KaiA",
+      "authors": "Welkie DG, Rubin BE, Chang YG, Diamond S, Rifkin SA, LiWang A, Golden SS",
+      "journal": "Proceedings of the National Academy of Sciences",
+      "year": 2018,
+      "doi": "10.1073/pnas.1802940115",
+      "pmid": "29991601",
+      "links": {
+        "paper": "https://doi.org/10.1073/pnas.1802940115"
+      }
+    },
+    {
+      "id": "pub-2018-002",
+      "title": "Mutant phenotypes for thousands of bacterial genes of unknown function",
+      "authors": "Price MN, Wetmore KM, Waters RJ, Callaghan M, Ray J, Liu H, Kuehl JV, Melnyk RA, Lamson JS, Suh Y, Carlson HK, Esquivel Z, Sadeeshkumar H, Chakraborty R, Zane GM, Rubin BE, Wall JD, Visel A, Bristow J, Blow MJ, Arkin AP, Deutschbauer AM",
+      "journal": "Nature",
+      "year": 2018,
+      "doi": "10.1038/s41586-018-0124-0",
+      "pmid": "29769716",
+      "links": {
+        "paper": "https://doi.org/10.1038/s41586-018-0124-0"
+      }
+    },
+    {
+      "id": "pub-2018-003",
+      "title": "High-throughput interaction screens illuminate the role of c-di-AMP in cyanobacterial nighttime survival",
+      "authors": "Rubin BE, Huynh TN, Welkie DG, Diamond S, Simkovsky R, Pierce EC, Taton A, Lowe LC, Lee JJ, Rifkin SA, Woodward JJ, Golden SS",
+      "journal": "PLoS Genetics",
+      "year": 2018,
+      "doi": "10.1371/journal.pgen.1007301",
+      "pmid": "29608558",
+      "links": {
+        "paper": "https://doi.org/10.1371/journal.pgen.1007301"
+      }
+    },
+    {
+      "id": "pub-2017-001",
+      "title": "Redox crisis underlies conditional light-dark lethality in cyanobacterial mutants that lack the circadian regulator, RpaA",
+      "authors": "Diamond S, Rubin BE, Shultzaberger RK, Chen Y, Barber CD, Golden SS",
+      "journal": "Proceedings of the National Academy of Sciences",
+      "year": 2017,
+      "doi": "10.1073/pnas.1613078114",
+      "pmid": "28074036",
+      "links": {
+        "paper": "https://doi.org/10.1073/pnas.1613078114"
+      }
+    },
+    {
+      "id": "pub-2016-001",
+      "title": "Unique attributes of cyanobacterial metabolism revealed by improved genome-scale metabolic modeling and essential gene analysis",
+      "authors": "Broddrick JT, Rubin BE, Welkie DG, Du N, Mih N, Diamond S, Lee JJ, Golden SS, Palsson BO",
+      "journal": "Proceedings of the National Academy of Sciences",
+      "year": 2016,
+      "doi": "10.1073/pnas.1613446113",
+      "pmid": "27911809",
+      "links": {
+        "paper": "https://doi.org/10.1073/pnas.1613446113"
+      }
+    },
+    {
+      "id": "pub-2015-001",
+      "title": "The essential gene set of a photosynthetic organism",
+      "authors": "Rubin BE, Wetmore KM, Price MN, Diamond S, Shultzaberger RK, Lowe LC, Curtin G, Arkin AP, Deutschbauer A, Golden SS",
+      "journal": "Proceedings of the National Academy of Sciences",
+      "year": 2015,
+      "doi": "10.1073/pnas.1519220112",
+      "pmid": "26508635",
+      "links": {
+        "paper": "https://doi.org/10.1073/pnas.1519220112"
+      }
+    },
+    {
+      "id": "pub-2015-002",
+      "title": "The circadian oscillator in Synechococcus elongatus controls metabolite partitioning during diurnal growth",
+      "authors": "Diamond S, Jun D, Rubin BE, Golden SS",
+      "journal": "Proceedings of the National Academy of Sciences",
+      "year": 2015,
+      "doi": "10.1073/pnas.1504576112",
+      "pmid": "25825710",
+      "links": {
+        "paper": "https://doi.org/10.1073/pnas.1504576112"
+      }
+    }
+  ],
+  "pending": [],
+  "rejected": []
+}
