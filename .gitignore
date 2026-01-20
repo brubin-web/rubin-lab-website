@@ -1,18 +1,17 @@
-# OS generated files
+# macOS
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+.AppleDouble
+.LSOverride
 
-# IDE
-.vscode/
+# Editor directories
 .idea/
+.vscode/
+*.swp
+*.swo
 
-# Node modules (for scripts)
-scripts/node_modules/
+# Local development
+.env
+.env.local
 
-# Claude local settings
-.claude/
+# Old website reference files (large PDFs)
+old website pdfs/

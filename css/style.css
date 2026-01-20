@@ -776,17 +776,19 @@ ul {
 
 .team-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: var(--spacing-xl);
 }
 
 .team-card {
     background: var(--color-white);
-    padding: var(--spacing-xl);
+    padding: var(--spacing-lg);
     border-radius: var(--border-radius-lg);
     box-shadow: var(--shadow-md);
-    text-align: center;
+    text-align: left;
     transition: var(--transition);
+    display: flex;
+    flex-direction: column;
 }
 
 .team-card:hover {
@@ -795,11 +797,12 @@ ul {
 }
 
 .team-card-image {
-    width: 150px;
-    height: 150px;
-    margin: 0 auto var(--spacing-lg);
+    width: 100px;
+    height: 100px;
+    margin: 0 auto var(--spacing-sm);
     border-radius: 50%;
     overflow: hidden;
+    flex-shrink: 0;
 }
 
 .team-card-image img {
@@ -811,35 +814,44 @@ ul {
 .team-card-placeholder {
     width: 100%;
     height: 100%;
-    background: var(--color-gray-200);
+    background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
+/* Smaller placeholder circles when no image */
+.team-card-image:has(.team-card-placeholder) {
+    width: 70px;
+    height: 70px;
+}
+
 .team-card-name {
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-base);
     font-weight: 600;
     color: var(--color-secondary);
     margin-bottom: var(--spacing-xs);
+    text-align: center;
 }
 
 .team-card-role {
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-xs);
     color: var(--color-primary);
     font-weight: 500;
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+    text-align: center;
 }
 
 .team-card-bio {
-    color: var(--color-gray-500);
-    font-size: var(--font-size-sm);
-    line-height: 1.7;
+    color: var(--color-gray-600);
+    font-size: var(--font-size-xs);
+    line-height: 1.6;
+    text-align: left;
 }
 
 /* Team Subsection Headers */
 .team-subsection {
-    margin-bottom: var(--spacing-3xl);
+    margin-bottom: var(--spacing-2xl);
 }
 
 .team-subsection:last-child {
@@ -847,15 +859,62 @@ ul {
 }
 
 .team-subsection-title {
-    font-size: var(--font-size-xl);
+    font-size: var(--font-size-lg);
     font-weight: 600;
     color: var(--color-primary);
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: var(--spacing-lg);
     padding-bottom: var(--spacing-sm);
     border-bottom: 2px solid var(--color-gray-200);
 }
 
-/* Alumni List */
+/* For sections with only 1-2 cards, don't stretch them full width */
+.team-grid-compact {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-xl);
+}
+
+@media (min-width: 769px) {
+    .team-grid-compact .team-card:only-child {
+        max-width: 350px;
+    }
+}
+
+/* Alumni Section - Simple List */
+.alumni-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.alumni-entry {
+    background: var(--color-white);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--color-gray-200);
+}
+
+.alumni-entry-name {
+    font-weight: 600;
+    color: var(--color-secondary);
+    font-size: var(--font-size-sm);
+}
+
+.alumni-entry-details {
+    font-size: var(--font-size-xs);
+    color: var(--color-gray-500);
+    margin-top: var(--spacing-xs);
+}
+
+.alumni-entry-current {
+    font-size: var(--font-size-xs);
+    color: var(--color-primary);
+    margin-top: var(--spacing-xs);
+}
+
+/* Alumni List (legacy) */
 .alumni-list {
     max-width: 700px;
     margin: 0 auto;
@@ -1188,6 +1247,16 @@ ul {
 /* ============================================
    Additional Responsive Styles
    ============================================ */
+@media (max-width: 1024px) {
+    .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .team-grid-compact {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 @media (max-width: 768px) {
     .research-detail {
         grid-template-columns: 1fr;
@@ -1219,6 +1288,20 @@ ul {
         flex-direction: column;
         gap: var(--spacing-xs);
         text-align: center;
+    }
+
+    .alumni-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .team-grid,
+    .team-grid-compact {
+        grid-template-columns: 1fr;
+    }
+
+    .team-card {
+        max-width: 400px;
+        margin: 0 auto;
     }
 }
 
