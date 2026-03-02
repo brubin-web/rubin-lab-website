@@ -280,6 +280,16 @@ async function sendEmailNotification(newPublications) {
 }
 
 /**
+ * Write the new_count output for GitHub Actions
+ */
+function setOutput(count) {
+    const outputFile = process.env.GITHUB_OUTPUT;
+    if (outputFile) {
+        fs.appendFileSync(outputFile, `new_count=${count}\n`);
+    }
+}
+
+/**
  * Main function
  */
 async function main() {
@@ -292,7 +302,8 @@ async function main() {
         existingData = JSON.parse(fileContent);
     } catch (error) {
         console.error('Error loading publications file:', error.message);
-        process.exit(1);
+        setOutput(0);
+        process.exit(0);
     }
 
     // Fetch from both sources
@@ -340,10 +351,11 @@ async function main() {
     await sendEmailNotification(newPublications);
 
     // Output for GitHub Actions
-    console.log(`\n::set-output name=new_count::${newPublications.length}`);
+    setOutput(newPublications.length);
 }
 
 main().catch(error => {
     console.error('Fatal error:', error);
-    process.exit(1);
+    setOutput(0);
+    process.exit(0);
 });

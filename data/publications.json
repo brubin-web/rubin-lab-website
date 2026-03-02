@@ -1,7 +1,19 @@
 {
-  "lastUpdated": "2026-01-18T00:00:00Z",
+  "lastUpdated": "2026-03-01T00:00:00Z",
   "orcidId": "0000-0001-8684-2417",
   "approved": [
+    {
+      "id": "pub-2026-002",
+      "title": "Plasmids weaponize conjugation to eliminate non-permissive recipients",
+      "authors": "Martinson JNV, Song LCT, Rubin BE",
+      "journal": "bioRxiv",
+      "year": 2026,
+      "doi": "10.64898/2026.02.10.705089",
+      "preprint": true,
+      "links": {
+        "paper": "https://doi.org/10.64898/2026.02.10.705089"
+      }
+    },
     {
       "id": "pub-2026-001",
       "title": "Identification of proteins influencing CRISPR-associated transposases for enhanced genome editing",
