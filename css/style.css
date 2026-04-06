@@ -692,7 +692,7 @@ ul {
    ============================================ */
 .research-detail {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 2fr;
     gap: var(--spacing-3xl);
     align-items: center;
 }
@@ -713,7 +713,8 @@ ul {
 
 .research-detail-image img {
     width: 100%;
-    height: auto;
+    aspect-ratio: 1 / 1;
+    max-height: 300px;
     object-fit: cover;
 }
 
