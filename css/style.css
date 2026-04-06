@@ -5,12 +5,12 @@
 
 /* CSS Custom Properties */
 :root {
-    /* Colors - Teal/Blue palette inspired by original */
-    --color-primary: #427C6F;
-    --color-primary-dark: #2B5A4F;
-    --color-primary-light: #5A9B8C;
+    /* Colors - Blue palette */
+    --color-primary: #3D9BE9;
+    --color-primary-dark: #88B1E2;
+    --color-primary-light: #D9EAFF;
     --color-secondary: #2B2F33;
-    --color-accent: #4A90A4;
+    --color-accent: #3D9BE9;
 
     /* Neutrals */
     --color-white: #FFFFFF;
@@ -1085,14 +1085,42 @@ ul {
     margin: 0 auto;
 }
 
-.news-featured {
-    background: var(--color-white);
-    border: 2px solid var(--color-primary);
-    border-radius: var(--border-radius-lg);
-    padding: var(--spacing-2xl);
-    margin-bottom: var(--spacing-3xl);
+/* Year Filter Pills */
+.news-year-filters {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-2xl);
+    flex-wrap: wrap;
 }
 
+.news-year-filters {
+    gap: var(--spacing-md);
+}
+
+.news-year-pill {
+    display: inline-block;
+    padding: var(--spacing-sm) var(--spacing-xl);
+    border-radius: 999px;
+    border: 2px solid var(--color-primary);
+    background: transparent;
+    color: var(--color-primary);
+    font-size: var(--font-size-lg);
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.news-year-pill:hover {
+    background: var(--color-primary);
+    color: var(--color-white);
+}
+
+.news-year-pill.active {
+    background: var(--color-primary);
+    color: var(--color-white);
+}
+
+/* News Tags */
 .news-tag {
     display: inline-block;
     background: var(--color-primary);
@@ -1103,7 +1131,7 @@ ul {
     letter-spacing: 0.05em;
     padding: var(--spacing-xs) var(--spacing-md);
     border-radius: var(--border-radius);
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
 }
 
 .news-date {
@@ -1113,29 +1141,17 @@ ul {
     margin-bottom: var(--spacing-sm);
 }
 
-.news-featured-title {
-    font-size: var(--font-size-2xl);
-    font-weight: 700;
-    color: var(--color-secondary);
-    margin-bottom: var(--spacing-md);
-}
-
-.news-featured-excerpt {
-    color: var(--color-gray-600);
-    line-height: 1.8;
-    margin-bottom: var(--spacing-lg);
-}
-
 .news-read-more {
     font-weight: 600;
     font-size: var(--font-size-sm);
     color: var(--color-primary);
 }
 
+/* News List */
 .news-list {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-xl);
 }
 
 .news-item {
@@ -1144,11 +1160,54 @@ ul {
     border-radius: var(--border-radius-lg);
     border: 1px solid var(--color-gray-200);
     transition: var(--transition);
+    display: flex;
+    gap: var(--spacing-xl);
+    align-items: stretch;
 }
 
 .news-item:hover {
     border-color: var(--color-primary-light);
     box-shadow: var(--shadow-md);
+}
+
+.news-item-featured {
+    border: 2px solid var(--color-primary);
+}
+
+.news-item-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.news-item-image {
+    flex-shrink: 0;
+    width: 200px;
+    display: flex;
+    align-items: center;
+}
+
+.news-item-image a {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.news-item-image img {
+    width: 100%;
+    height: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+}
+
+.news-item-image a:hover img {
+    filter: brightness(0.75);
+}
+
+.news-img-contain {
+    object-fit: contain;
+    max-height: none;
 }
 
 .news-item-title {
@@ -1162,6 +1221,15 @@ ul {
     color: var(--color-gray-500);
     line-height: 1.7;
     margin-bottom: var(--spacing-md);
+}
+
+.news-item-excerpt a {
+    color: var(--color-primary);
+    font-weight: 500;
+}
+
+.news-item.hidden {
+    display: none;
 }
 
 /* ============================================
@@ -1342,8 +1410,16 @@ ul {
         font-size: var(--font-size-3xl);
     }
 
-    .news-featured {
-        padding: var(--spacing-lg);
+    .news-item {
+        flex-direction: column;
+    }
+
+    .news-item-image {
+        width: 100%;
+    }
+
+    .news-item-image img {
+        max-height: 250px;
     }
 
     .contact-form {
@@ -1401,4 +1477,121 @@ ul {
 
 .publications-error p {
     color: var(--color-gray-600);
+}
+
+/* ============================================
+   Photo Gallery Carousel
+   ============================================ */
+.gallery-section {
+    padding-bottom: 0;
+}
+
+.gallery-caption {
+    text-align: center;
+    font-size: var(--font-size-xl);
+    font-weight: 500;
+    color: var(--color-gray-600);
+    margin-top: var(--spacing-lg);
+    margin-bottom: 0;
+}
+
+.gallery-carousel {
+    position: relative;
+    max-width: 700px;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.gallery-track {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+
+.gallery-slide {
+    min-width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.gallery-slide img {
+    width: 100%;
+    height: 450px;
+    object-fit: cover;
+    display: block;
+}
+
+.gallery-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.gallery-slide:hover .gallery-overlay {
+    opacity: 1;
+}
+
+.gallery-title {
+    color: var(--color-white);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+}
+
+.gallery-date {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: var(--font-size-sm);
+}
+
+.gallery-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.85);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--color-primary);
+    transition: background 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.gallery-btn:hover {
+    background: var(--color-white);
+}
+
+.gallery-btn-prev {
+    left: 12px;
+}
+
+.gallery-btn-next {
+    right: 12px;
+}
+
+
+@media (max-width: 768px) {
+    .gallery-slide img {
+        height: 280px;
+    }
+
+    .gallery-overlay {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        opacity: 1;
+    }
 }
