@@ -153,7 +153,7 @@ ul {
 }
 
 .nav-link {
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-base);
     font-weight: 500;
     color: var(--color-gray-600);
     padding: var(--spacing-sm) 0;
@@ -667,8 +667,8 @@ ul {
    Page Hero (for inner pages)
    ============================================ */
 .page-hero {
-    padding-top: calc(var(--header-height) + var(--spacing-4xl));
-    padding-bottom: var(--spacing-3xl);
+    padding-top: calc(var(--header-height) + var(--spacing-2xl));
+    padding-bottom: var(--spacing-2xl);
     background: linear-gradient(135deg, var(--color-gray-50) 0%, var(--color-white) 100%);
     text-align: center;
 }
@@ -677,14 +677,7 @@ ul {
     font-size: var(--font-size-4xl);
     font-weight: 700;
     color: var(--color-secondary);
-    margin-bottom: var(--spacing-md);
-}
-
-.page-subtitle {
-    font-size: var(--font-size-lg);
-    color: var(--color-gray-500);
-    max-width: 600px;
-    margin: 0 auto;
+    margin-bottom: 0;
 }
 
 /* ============================================
@@ -860,7 +853,7 @@ ul {
 }
 
 .team-card-name {
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-lg);
     font-weight: 600;
     color: var(--color-secondary);
     margin-bottom: var(--spacing-xs);
@@ -868,8 +861,8 @@ ul {
 }
 
 .team-card-role {
-    font-size: var(--font-size-xs);
-    color: var(--color-primary);
+    font-size: var(--font-size-sm);
+    color: #7A8FA8;
     font-weight: 500;
     margin-bottom: var(--spacing-sm);
     text-align: center;
@@ -877,7 +870,7 @@ ul {
 
 .team-card-bio {
     color: var(--color-gray-600);
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-sm);
     line-height: 1.6;
     text-align: left;
 }
@@ -892,7 +885,7 @@ ul {
 }
 
 .team-subsection-title {
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-xl);
     font-weight: 600;
     color: var(--color-primary);
     margin-bottom: var(--spacing-lg);
@@ -932,17 +925,17 @@ ul {
 .alumni-entry-name {
     font-weight: 600;
     color: var(--color-secondary);
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-base);
 }
 
 .alumni-entry-details {
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-sm);
     color: var(--color-gray-500);
     margin-top: var(--spacing-xs);
 }
 
 .alumni-entry-current {
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-sm);
     color: var(--color-primary);
     margin-top: var(--spacing-xs);
 }
@@ -1171,7 +1164,8 @@ ul {
     box-shadow: var(--shadow-md);
 }
 
-.news-item-featured {
+.news-item-featured,
+.news-list .news-item:first-child {
     border: 2px solid var(--color-primary);
 }
 

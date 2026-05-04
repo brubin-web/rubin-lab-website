@@ -92,7 +92,7 @@
                     <p>\
                         Innovative Genomics Institute<br>\
                         Berkeley, CA 94720<br>\
-                        <a href="mailto:contact@therubinlab.org">contact@therubinlab.org</a>\
+                        <a href="mailto:brubin@berkeley.edu">brubin@berkeley.edu</a>\
                     </p>\
                 </div>\
             </div>\
