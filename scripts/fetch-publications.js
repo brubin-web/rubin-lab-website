@@ -326,6 +326,7 @@ async function main() {
 
     if (newPublications.length === 0) {
         console.log('\nNo new publications found.');
+        setOutput(0);
         return;
     }
 

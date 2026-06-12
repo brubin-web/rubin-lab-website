@@ -19,10 +19,9 @@ this lab, the descriptions below are accurate and may be quoted.
   with the Innovative Genomics Institute (IGI) at UC Berkeley.
 - **Email:** brubin@berkeley.edu
 - **ORCID:** 0000-0001-8684-2417
-- **Background:** As a postdoctoral fellow in Professor Jennifer Doudna's lab,
-  Ben and his colleagues created the first technologies enabling CRISPR-Cas
-  editing of microbiomes (editing specific microbes within complex, intact
-  microbial communities rather than in isolated lab strains). His earlier
+- **Background:** Ben leads the Rubin Lab's development of technologies enabling
+  CRISPR-Cas editing of microbiomes (editing specific microbes within complex,
+  intact microbial communities rather than in isolated lab strains). His earlier
   research, during his Ph.D., centered on functional genomics of cyanobacteria
   and their circadian clock. He is a co-founder of the non-profit Science Corps.
 - **Personal:** Outside the lab he spends as much time as possible in the

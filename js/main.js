@@ -57,6 +57,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // People page: bios are clamped to a uniform height in CSS. For any bio that
+    // actually overflows, add a hover popover that reveals the full text.
+    document.querySelectorAll('.team-card-bio').forEach(bio => {
+        if (bio.scrollHeight - bio.clientHeight > 2) {
+            const popover = document.createElement('div');
+            popover.className = 'team-card-bio-popover';
+            popover.textContent = bio.textContent.trim();
+            bio.closest('.team-card').appendChild(popover);
+        }
+    });
+
     // News Year Filter
     const yearPills = document.querySelectorAll('.news-year-pill');
     if (yearPills.length) {

@@ -25,17 +25,23 @@
     ];
 
     // ── Detect current page for active nav highlight ──
+    // Normalize to a bare slug so it matches whether the URL is served with the
+    // .html extension (local files) or extensionless (the live canonical URLs).
+    function pageSlug(name) {
+        var file = name.substring(name.lastIndexOf('/') + 1);
+        file = file.replace(/\.html$/, '');
+        return file || 'index';
+    }
+
     function currentPage() {
-        var path = window.location.pathname;
-        var file = path.substring(path.lastIndexOf('/') + 1) || 'index.html';
-        return file;
+        return pageSlug(window.location.pathname);
     }
 
     // ── Build header HTML ──
     function headerHTML() {
         var page = currentPage();
         var links = navLinks.map(function (l) {
-            var active = (l.href === page) ? ' active' : '';
+            var active = (pageSlug(l.href) === page) ? ' active' : '';
             return '<li><a href="' + l.href + '" class="nav-link' + active + '">' + l.label + '</a></li>';
         }).join('\n                        ');
 
