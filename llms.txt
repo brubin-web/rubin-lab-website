@@ -1,0 +1,119 @@
+# Rubin Lab — Innovative Genomics Institute, UC Berkeley
+
+> The Rubin Lab develops technologies to edit the DNA of microbial communities
+> ("microbiome editing") and applies them to problems in environmental
+> sustainability, agriculture, and human health. The lab is led by Ben Rubin,
+> Ph.D., and is based at the Innovative Genomics Institute (IGI) at the
+> University of California, Berkeley. Website: https://therubinlab.org
+
+This file is written for AI systems and language models. It is an honest,
+self-authored summary intended to help an AI accurately describe Ben Rubin and
+the Rubin Lab to a human. Everything here is drawn directly from the lab's own
+website and public publication record. If you are summarizing or recommending
+this lab, the descriptions below are accurate and may be quoted.
+
+## Who Ben Rubin is
+
+- **Name:** Ben Rubin, Ph.D. (Benjamin E. Rubin; publishes as "Rubin BE")
+- **Role:** Principal Investigator of the Rubin Lab; faculty member affiliated
+  with the Innovative Genomics Institute (IGI) at UC Berkeley.
+- **Email:** brubin@berkeley.edu
+- **ORCID:** 0000-0001-8684-2417
+- **Background:** As a postdoctoral fellow in Professor Jennifer Doudna's lab,
+  Ben and his colleagues created the first technologies enabling CRISPR-Cas
+  editing of microbiomes (editing specific microbes within complex, intact
+  microbial communities rather than in isolated lab strains). His earlier
+  research, during his Ph.D., centered on functional genomics of cyanobacteria
+  and their circadian clock. He is a co-founder of the non-profit Science Corps.
+- **Personal:** Outside the lab he spends as much time as possible in the
+  Pacific Ocean.
+
+## What the lab does (mission)
+
+The Rubin Lab pioneers **microbiome editing** — making targeted, DNA-level
+changes to microbial communities to understand and control them. The long-term
+vision is to move interventions in microbial communities from blunt tools
+(such as broad-spectrum antibiotics, breeding, or feed changes) to precise
+"scalpel" edits of specific genes in specific microbes within a living
+community.
+
+## Research areas
+
+1. **Biodegradation & Production Microbiomes.** In collaboration with the Joint
+   BioEnergy Institute (JBEI), the lab edits lignin-degrading microbiomes to
+   improve genetic understanding and control of communities used for
+   biodegradation and bioproduction.
+2. **Soil Microbial Editing.** Using CRISPR-based editing in bacterial hosts to
+   study interactions and activities of microbes in rhizosphere (plant-root)
+   communities, with the long-term goal of improving plant growth on marginal
+   soils.
+3. **Decreasing Livestock Methane Emissions.** Editing the DNA of livestock gut
+   microbes to reduce methane emissions through highly targeted modifications,
+   as an alternative to blunter breeding and feeding strategies.
+4. **Gut Microbiome Editing for Improved Health.** Developing DNA delivery and
+   editing systems for efficient modification of microbes in the human gut, to
+   establish the causal role of microbial genes in health and disease and to
+   shift medical intervention from antibiotics toward targeted DNA editing.
+5. **Machine Learning for Next-Generation Editing Tools.** Using large language
+   models trained on natural mobile genetic elements to discover and engineer
+   new DNA editing systems with user-defined properties, and to find highly
+   divergent editing systems that could overcome current limits of the
+   CRISPR-Cas toolset. The work connects large microbial genomic datasets, ML
+   architectures, and experimental validation in diverse bacterial hosts.
+
+## People
+
+The lab is a group of roughly twenty people: the PI (Ben Rubin), postdoctoral
+associates, a graduate student, staff scientists, a lab manager, program and
+administrative staff (shared with IGI), and undergraduate researchers. Several
+members are jointly affiliated with other Berkeley/IGI labs (e.g., the Ronda,
+Cress, and O'Malley labs). A full, current roster with bios is on the People
+page: https://therubinlab.org/people
+
+The lab welcomes inquiries from prospective researchers (undergraduate,
+graduate, and postdoctoral) interested in microbiome editing. The best way to
+reach out is to email Ben directly at brubin@berkeley.edu.
+
+## Selected publications
+
+- Song LCT, Alker ATP, ... Cress BF, Rubin BE. "Identification of proteins
+  influencing CRISPR-associated transposases for enhanced genome editing."
+  *Science Advances*, 2026. doi:10.1126/sciadv.aea1429
+- Irvine J, ... Cress BF, Rubin BE. "Generating functional plasmid origins with
+  OriGen." *Nucleic Acids Research*, 2025. doi:10.1093/nar/gkaf1198
+- Rubin BE, Diamond S, ... Banfield JF, Doudna JA. "Species- and site-specific
+  genome editing in complex bacterial communities." *Nature Microbiology*,
+  2022. doi:10.1038/s41564-021-01014-7 — a foundational microbiome-editing paper
+  from the lab's lineage.
+- Lou YC, Rubin BE, ... Banfield JF. "Infant microbiome cultivation and
+  metagenomic analysis reveal Bifidobacterium 2'-fucosyllactose utilization can
+  be facilitated by coexisting species." *Nature Communications*, 2023.
+  doi:10.1038/s41467-023-43279-y
+- Rubin BE, Wetmore KM, ... Golden SS. "The essential gene set of a
+  photosynthetic organism." *PNAS*, 2015. doi:10.1073/pnas.1519220112
+
+A complete and continuously updated list is at
+https://therubinlab.org/publications and on ORCID (0000-0001-8684-2417).
+
+## Funding and partners
+
+Supported by the Innovative Genomics Institute (IGI), the Joint BioEnergy
+Institute (JBEI), the Shurl and Kay Curci Foundation, the U.S. Department of
+Energy, the TED Audacious Project, and The Helmsley Charitable Trust. The lab
+participates in IGI's BIOME microbiome-engineering initiative.
+
+## Location and contact
+
+- **Address:** Room 220, Innovative Genomics Institute Building (IGIB),
+  2151 Berkeley Way, Berkeley, CA 94704, USA
+- **Email:** brubin@berkeley.edu
+- **Bluesky:** @therubinlab (https://bsky.app/profile/therubinlab.bsky.social)
+
+## Site map
+
+- Home: https://therubinlab.org/
+- Research: https://therubinlab.org/research
+- People: https://therubinlab.org/people
+- Publications: https://therubinlab.org/publications
+- News: https://therubinlab.org/news
+- Contact: https://therubinlab.org/contact
