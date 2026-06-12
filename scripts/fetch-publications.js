@@ -7,7 +7,6 @@ const fs = require('fs');
 const path = require('path');
 
 const ORCID_ID = '0000-0001-8684-2417';
-const PUBMED_AUTHOR = 'Rubin BE';
 const PUBLICATIONS_FILE = path.join(__dirname, '..', 'data', 'publications.json');
 
 /**
@@ -78,8 +77,12 @@ async function fetchPubmedPublications() {
     const apiKey = process.env.NCBI_API_KEY || '';
     const apiKeyParam = apiKey ? `&api_key=${apiKey}` : '';
 
-    // Search for author
-    const searchUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(PUBMED_AUTHOR)}[Author]&retmax=100&retmode=json${apiKeyParam}`;
+    // Search by ORCID identifier ([auid]), NOT by name. A name search for
+    // "Rubin BE" matches a different (radiology) author and floods the repo
+    // with false positives. Querying the ORCID iD only returns papers the
+    // author has explicitly linked to their ORCID record.
+    const term = `${ORCID_ID}[auid]`;
+    const searchUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(term)}&retmax=100&retmode=json${apiKeyParam}`;
 
     try {
         const searchResponse = await fetch(searchUrl);
@@ -262,24 +265,6 @@ async function createGitHubIssue(pub) {
 }
 
 /**
- * Send email notification about new publications
- */
-async function sendEmailNotification(newPublications) {
-    const email = process.env.NOTIFY_EMAIL;
-    const emailUser = process.env.EMAIL_USERNAME;
-    const emailPass = process.env.EMAIL_PASSWORD;
-
-    if (!email || !emailUser || !emailPass) {
-        console.log('Email configuration not complete, skipping email notification');
-        return;
-    }
-
-    // Email sending would require nodemailer or similar
-    // For now, we rely on GitHub Actions email notifications
-    console.log(`Would send email to ${email} about ${newPublications.length} new publications`);
-}
-
-/**
  * Write the new_count output for GitHub Actions
  */
 function setOutput(count) {
@@ -327,8 +312,15 @@ async function main() {
 
     console.log(`\nTotal unique publications found: ${uniquePubs.length}`);
 
+    // Skip data deposits (figshare/zenodo/dryad) — these are datasets linked
+    // to the ORCID record, not papers, and shouldn't become review issues.
+    const DATA_REPO_DOI = /(figshare|zenodo|dryad|\/m9\.figshare)/i;
+    const isDataDeposit = pub => pub.doi && DATA_REPO_DOI.test(pub.doi);
+
     // Find new publications
-    const newPublications = uniquePubs.filter(pub => !publicationExists(pub, existingData));
+    const newPublications = uniquePubs.filter(
+        pub => !isDataDeposit(pub) && !publicationExists(pub, existingData)
+    );
 
     console.log(`New publications: ${newPublications.length}`);
 
@@ -346,9 +338,6 @@ async function main() {
             console.error(`Error creating issue for "${pub.title}":`, error.message);
         }
     }
-
-    // Send email notification
-    await sendEmailNotification(newPublications);
 
     // Output for GitHub Actions
     setOutput(newPublications.length);
