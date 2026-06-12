@@ -418,16 +418,45 @@ ul {
 }
 
 .news-card {
+    display: flex;
+    flex-direction: column;
     background: var(--color-white);
-    padding: var(--spacing-xl);
     border-radius: var(--border-radius-lg);
     border: 1px solid var(--color-gray-200);
+    overflow: hidden;
     transition: var(--transition);
+    text-decoration: none;
+    color: inherit;
 }
 
 .news-card:hover {
     border-color: var(--color-primary-light);
     box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+}
+
+.news-card-image {
+    height: 180px;
+    overflow: hidden;
+    background: var(--color-gray-100);
+}
+
+.news-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.news-card:hover .news-card-image img {
+    transform: scale(1.04);
+}
+
+.news-card-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: var(--spacing-xl);
 }
 
 .news-card-date {
@@ -451,6 +480,8 @@ ul {
 }
 
 .news-card-link {
+    margin-top: auto;
+    color: var(--color-primary);
     font-weight: 600;
     font-size: var(--font-size-sm);
 }
@@ -904,6 +935,19 @@ ul {
     .team-grid-compact .team-card:only-child {
         max-width: 350px;
     }
+
+    /* A subsection with a single person (e.g. the PI, or a sole grad student)
+       shouldn't sit stranded in the left column — center it at a sane width. */
+    .team-grid:has(> .team-card:only-child) {
+        grid-template-columns: minmax(0, 360px);
+        justify-content: center;
+    }
+
+    /* Two-person rows: center the pair rather than leaving a gap on the right. */
+    .team-grid:has(> .team-card:nth-child(2):last-child) {
+        grid-template-columns: repeat(2, minmax(0, 360px));
+        justify-content: center;
+    }
 }
 
 /* Alumni Section - Simple List */
@@ -1164,6 +1208,10 @@ ul {
     box-shadow: var(--shadow-md);
 }
 
+.news-item-clickable {
+    cursor: pointer;
+}
+
 .news-item-featured,
 .news-list .news-item:first-child {
     border: 2px solid var(--color-primary);
@@ -1399,23 +1447,26 @@ ul {
         max-width: 400px;
         margin: 0 auto;
     }
-}
 
-@media (max-width: 480px) {
-    .page-title {
-        font-size: var(--font-size-3xl);
-    }
-
+    /* Stack news items so the image sits full-width above the text on phones,
+       instead of being squeezed into a narrow column beside it. */
     .news-item {
         flex-direction: column;
     }
 
     .news-item-image {
         width: 100%;
+        order: -1;
     }
 
     .news-item-image img {
-        max-height: 250px;
+        max-height: 220px;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-title {
+        font-size: var(--font-size-3xl);
     }
 
     .contact-form {
