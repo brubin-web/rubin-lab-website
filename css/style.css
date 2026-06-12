@@ -325,13 +325,18 @@ ul {
     background: var(--color-gray-50);
 }
 
+/* Flexbox (not grid) so the last row of an odd card count centers
+   instead of leaving a gap — the homepage has 5 research cards. */
 .research-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: var(--spacing-xl);
 }
 
 .research-card {
+    flex: 1 1 300px;
+    max-width: 360px;
     background: var(--color-white);
     padding: var(--spacing-xl);
     border-radius: var(--border-radius-lg);
@@ -1117,6 +1122,22 @@ ul {
     font-size: var(--font-size-sm);
     color: var(--color-gray-500);
     margin-bottom: var(--spacing-md);
+}
+
+/* Small badge marking preprints (e.g. bioRxiv) vs. peer-reviewed papers */
+.publication-badge {
+    display: inline-block;
+    margin-left: var(--spacing-xs);
+    padding: 1px 8px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-primary);
+    background: var(--color-gray-100, rgba(0, 0, 0, 0.05));
+    border: 1px solid var(--color-primary);
+    border-radius: 999px;
+    vertical-align: middle;
 }
 
 .publication-links {

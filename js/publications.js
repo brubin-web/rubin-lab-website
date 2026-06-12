@@ -8,7 +8,7 @@
 
     const PUBLICATIONS_URL = 'data/publications.json';
     const CONTAINER_ID = 'publications-container';
-    const GOOGLE_SCHOLAR_URL = 'https://scholar.google.com/citations?user=YOUR_SCHOLAR_ID';
+    const ORCID_URL = 'https://orcid.org/0000-0001-8684-2417';
 
     /**
      * Format author string with bold highlighting for Rubin BE
@@ -61,7 +61,7 @@
                         ${formatAuthors(pub.authors)}
                     </p>
                     <p class="publication-journal">
-                        <em>${pub.journal}</em> (${pub.year})
+                        <em>${pub.journal}</em> (${pub.year})${pub.preprint ? ' <span class="publication-badge">Preprint</span>' : ''}
                     </p>
                     ${linksHTML}
                 </article>`;
@@ -115,11 +115,11 @@
             </div>`;
         });
 
-        // Add Google Scholar link
+        // Link out to the full, canonical publication record on ORCID
         html += `
             <div class="publications-more">
-                <p>For a complete list of publications, visit:</p>
-                <a href="${GOOGLE_SCHOLAR_URL}" class="btn btn-secondary" target="_blank" rel="noopener">Google Scholar Profile</a>
+                <p>Ben Rubin's full publication record is available on ORCID:</p>
+                <a href="${ORCID_URL}" class="btn btn-secondary" target="_blank" rel="noopener">ORCID Profile</a>
             </div>
         `;
 

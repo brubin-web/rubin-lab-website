@@ -97,8 +97,10 @@
                     <h4 class="footer-heading">Contact</h4>\
                     <p>\
                         Innovative Genomics Institute<br>\
-                        Berkeley, CA 94720<br>\
-                        <a href="mailto:brubin@berkeley.edu">brubin@berkeley.edu</a>\
+                        2151 Berkeley Way, Room 220<br>\
+                        Berkeley, CA 94704<br>\
+                        <a href="mailto:brubin@berkeley.edu">brubin@berkeley.edu</a><br>\
+                        Bluesky: <a href="https://bsky.app/profile/therubinlab.bsky.social" target="_blank" rel="noopener noreferrer">@therubinlab</a>\
                     </p>\
                 </div>\
             </div>\
