@@ -1232,7 +1232,8 @@ ul {
    ============================================ */
 .contact-wrapper {
     display: grid;
-    grid-template-columns: 1fr 400px;
+    grid-template-columns: minmax(auto, 600px);
+    justify-content: center;
     gap: var(--spacing-3xl);
     align-items: start;
 }
