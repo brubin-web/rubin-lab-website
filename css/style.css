@@ -941,7 +941,11 @@ ul {
     transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-.team-card:hover .team-card-bio-popover {
+/* Trigger on the bio text only (not the whole card) so hovering the photo
+   reveals the fun photo instead of the popover stealing the pointer.
+   The popover:hover clause keeps it open once the pointer moves onto it. */
+.team-card:has(.team-card-bio:hover) .team-card-bio-popover,
+.team-card-bio-popover:hover {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
