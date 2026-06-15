@@ -6,12 +6,12 @@
 
     // ── Nav links (label → href) ──
     var navLinks = [
-        { label: 'Home', href: 'index.html' },
-        { label: 'Research', href: 'research.html' },
-        { label: 'People', href: 'people.html' },
-        { label: 'Publications', href: 'publications.html' },
-        { label: 'News', href: 'news.html' },
-        { label: 'Contact', href: 'contact.html' }
+        { label: 'Home', href: '/' },
+        { label: 'Research', href: '/research' },
+        { label: 'People', href: '/people' },
+        { label: 'Publications', href: '/publications' },
+        { label: 'News', href: '/news' },
+        { label: 'Contact', href: '/contact' }
     ];
 
     // ── Funder logos (src → alt) ──
@@ -48,7 +48,7 @@
         return '\
         <div class="container">\
             <div class="header-content">\
-                <a href="index.html" class="logo">\
+                <a href="/" class="logo">\
                     <img src="images/logos/black-logo.png" alt="Rubin Lab" class="logo-icon">\
                     <span class="logo-text">Rubin Lab</span>\
                 </a>\
@@ -87,10 +87,10 @@
                 <div class="footer-links">\
                     <h4 class="footer-heading">Quick Links</h4>\
                     <ul>\
-                        <li><a href="research.html">Research</a></li>\
-                        <li><a href="people.html">People</a></li>\
-                        <li><a href="publications.html">Publications</a></li>\
-                        <li><a href="contact.html">Contact</a></li>\
+                        <li><a href="/research">Research</a></li>\
+                        <li><a href="/people">People</a></li>\
+                        <li><a href="/publications">Publications</a></li>\
+                        <li><a href="/contact">Contact</a></li>\
                     </ul>\
                 </div>\
                 <div class="footer-contact">\
