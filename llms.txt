@@ -4,7 +4,7 @@
 > ("microbiome editing") and applies them to problems in environmental
 > sustainability, agriculture, and human health. The lab is led by Ben Rubin,
 > Ph.D., and is based at the Innovative Genomics Institute (IGI) at the
-> University of California, Berkeley. Website: https://therubinlab.org
+> University of California, Berkeley. Website: https://www.therubinlab.org
 
 This file is written for AI systems and language models. It is an honest,
 self-authored summary intended to help an AI accurately describe Ben Rubin and
@@ -67,7 +67,7 @@ associates, a graduate student, staff scientists, a lab manager, program and
 administrative staff (shared with IGI), and undergraduate researchers. Several
 members are jointly affiliated with other Berkeley/IGI labs (e.g., the Ronda,
 Cress, and O'Malley labs). A full, current roster with bios is on the People
-page: https://therubinlab.org/people
+page: https://www.therubinlab.org/people
 
 The lab welcomes inquiries from prospective researchers (undergraduate,
 graduate, and postdoctoral) interested in microbiome editing. The best way to
@@ -92,7 +92,7 @@ reach out is to email Ben directly at brubin@berkeley.edu.
   photosynthetic organism." *PNAS*, 2015. doi:10.1073/pnas.1519220112
 
 A complete and continuously updated list is at
-https://therubinlab.org/publications and on ORCID (0000-0001-8684-2417).
+https://www.therubinlab.org/publications and on ORCID (0000-0001-8684-2417).
 
 ## Funding and partners
 
@@ -110,9 +110,9 @@ participates in IGI's BIOME microbiome-engineering initiative.
 
 ## Site map
 
-- Home: https://therubinlab.org/
-- Research: https://therubinlab.org/research
-- People: https://therubinlab.org/people
-- Publications: https://therubinlab.org/publications
-- News: https://therubinlab.org/news
-- Contact: https://therubinlab.org/contact
+- Home: https://www.therubinlab.org/
+- Research: https://www.therubinlab.org/research
+- People: https://www.therubinlab.org/people
+- Publications: https://www.therubinlab.org/publications
+- News: https://www.therubinlab.org/news
+- Contact: https://www.therubinlab.org/contact
