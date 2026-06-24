@@ -15,3 +15,6 @@
 
 # Old website reference files (large PDFs)
 old website pdfs/
+
+# Local Claude Code worktrees/config
+.claude/
