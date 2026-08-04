@@ -1,151 +1,31 @@
-// Shared header & footer components
-// Single source of truth — edit here, all pages update automatically.
+// Behaviour for the shared header & footer.
+//
+// The header/footer MARKUP lives in each page's HTML so that crawlers which
+// don't run JavaScript still see the navigation links. To change the nav items,
+// funder logos, or contact block, edit scripts/build-shell.js and re-run
+// `node scripts/build-shell.js`.
 
 (function () {
     'use strict';
 
-    // ── Nav links (label → href) ──
-    var navLinks = [
-        { label: 'Home', href: '/' },
-        { label: 'Research', href: '/research' },
-        { label: 'People', href: '/people' },
-        { label: 'Publications', href: '/publications' },
-        { label: 'News', href: '/news' },
-        { label: 'Contact', href: '/contact' }
-    ];
-
-    // ── Funder logos (src → alt) ──
-    var funders = [
-        { src: 'images/funders/igi.jpg', alt: 'Innovative Genomics Institute' },
-        { src: 'images/funders/jbei.png', alt: 'Joint BioEnergy Institute' },
-        { src: 'images/funders/curci.png', alt: 'Shurl and Kay Curci Foundation' },
-        { src: 'images/funders/doe.png', alt: 'U.S. Department of Energy' },
-        { src: 'images/funders/audacious.png', alt: 'TED Audacious Project' },
-        { src: 'images/funders/helmsley.png', alt: 'The Helmsley Charitable Trust' }
-    ];
-
-    // ── Detect current page for active nav highlight ──
-    // Normalize to a bare slug so it matches whether the URL is served with the
-    // .html extension (local files) or extensionless (the live canonical URLs).
-    function pageSlug(name) {
-        var file = name.substring(name.lastIndexOf('/') + 1);
-        file = file.replace(/\.html$/, '');
-        return file || 'index';
-    }
-
-    function currentPage() {
-        return pageSlug(window.location.pathname);
-    }
-
-    // ── Build header HTML ──
-    function headerHTML() {
-        var page = currentPage();
-        var links = navLinks.map(function (l) {
-            var active = (pageSlug(l.href) === page) ? ' active' : '';
-            return '<li><a href="' + l.href + '" class="nav-link' + active + '">' + l.label + '</a></li>';
-        }).join('\n                        ');
-
-        return '\
-        <div class="container">\
-            <div class="header-content">\
-                <a href="/" class="logo">\
-                    <img src="images/logos/black-logo.png" alt="Rubin Lab" class="logo-icon">\
-                    <span class="logo-text">Rubin Lab</span>\
-                </a>\
-                <nav class="nav" id="nav">\
-                    <ul class="nav-list">\
-                        ' + links + '\
-                    </ul>\
-                </nav>\
-                <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle menu">\
-                    <span></span>\
-                    <span></span>\
-                    <span></span>\
-                </button>\
-            </div>\
-        </div>';
-    }
-
-    // ── Build footer HTML ──
-    function footerHTML() {
-        var logos = funders.map(function (f) {
-            return '<img src="' + f.src + '" alt="' + f.alt + '" class="footer-funder-logo">';
-        }).join('\n                    ');
-
-        var year = new Date().getFullYear();
-
-        return '\
-        <div class="container">\
-            <div class="footer-content">\
-                <div class="footer-info">\
-                    <h3 class="footer-logo">Rubin Lab</h3>\
-                    <p class="footer-affiliation">\
-                        Innovative Genomics Institute<br>\
-                        University of California, Berkeley\
-                    </p>\
-                </div>\
-                <div class="footer-links">\
-                    <h4 class="footer-heading">Quick Links</h4>\
-                    <ul>\
-                        <li><a href="/research">Research</a></li>\
-                        <li><a href="/people">People</a></li>\
-                        <li><a href="/publications">Publications</a></li>\
-                        <li><a href="/contact">Contact</a></li>\
-                    </ul>\
-                </div>\
-                <div class="footer-contact">\
-                    <h4 class="footer-heading">Contact</h4>\
-                    <p>\
-                        Innovative Genomics Institute<br>\
-                        2151 Berkeley Way, Room 220<br>\
-                        Berkeley, CA 94704<br>\
-                        <a href="mailto:brubin@berkeley.edu">brubin@berkeley.edu</a><br>\
-                        Bluesky: <a href="https://bsky.app/profile/therubinlab.bsky.social" target="_blank" rel="noopener noreferrer">@therubinlab</a>\
-                    </p>\
-                </div>\
-            </div>\
-            <div class="footer-funder">\
-                <p class="footer-funder-text">Supported by</p>\
-                <div class="footer-funder-logos">\
-                    ' + logos + '\
-                </div>\
-            </div>\
-            <div class="footer-bottom">\
-                <p>&copy; ' + year + ' Rubin Lab. All rights reserved.</p>\
-            </div>\
-        </div>';
-    }
-
-    // ── Inject & wire up event listeners ──
     document.addEventListener('DOMContentLoaded', function () {
-        // Inject header
         var header = document.querySelector('.header');
-        if (header) {
-            header.innerHTML = headerHTML();
-        }
-
-        // Inject footer
-        var footer = document.querySelector('.footer');
-        if (footer) {
-            footer.innerHTML = footerHTML();
-        }
-
-        // Mobile menu toggle
         var menuToggle = document.getElementById('mobile-menu-toggle');
         var nav = document.getElementById('nav');
 
         if (menuToggle && nav) {
             menuToggle.addEventListener('click', function () {
-                nav.classList.toggle('active');
-                menuToggle.classList.toggle('active');
+                var open = nav.classList.toggle('active');
+                menuToggle.classList.toggle('active', open);
+                menuToggle.setAttribute('aria-expanded', String(open));
             });
 
             // Close menu when clicking a link
-            var links = nav.querySelectorAll('.nav-link');
-            links.forEach(function (link) {
+            nav.querySelectorAll('.nav-link').forEach(function (link) {
                 link.addEventListener('click', function () {
                     nav.classList.remove('active');
                     menuToggle.classList.remove('active');
+                    menuToggle.setAttribute('aria-expanded', 'false');
                 });
             });
         }
@@ -159,6 +39,12 @@
                     header.style.boxShadow = '0 1px 2px 0 rgba(0, 0, 0, 0.05)';
                 }
             });
+        }
+
+        // Keep the copyright year current without a rebuild.
+        var yearEl = document.getElementById('footer-year');
+        if (yearEl) {
+            yearEl.textContent = String(new Date().getFullYear());
         }
     });
 })();

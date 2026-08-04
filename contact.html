@@ -14,7 +14,31 @@
 </head>
 <body>
     <!-- Header -->
-    <header class="header"></header>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">
+                    <img src="images/logos/black-logo.png" alt="Rubin Lab" class="logo-icon">
+                    <span class="logo-text">Rubin Lab</span>
+                </a>
+                <nav class="nav" id="nav" aria-label="Main navigation">
+                    <ul class="nav-list">
+                        <li><a href="/" class="nav-link">Home</a></li>
+                        <li><a href="/research" class="nav-link">Research</a></li>
+                        <li><a href="/people" class="nav-link">People</a></li>
+                        <li><a href="/publications" class="nav-link">Publications</a></li>
+                        <li><a href="/news" class="nav-link">News</a></li>
+                        <li><a href="/contact" class="nav-link active" aria-current="page">Contact</a></li>
+                    </ul>
+                </nav>
+                <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle menu" aria-controls="nav" aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
 
     <!-- Page Hero -->
     <section class="page-hero">
@@ -77,7 +101,52 @@
     </section>
 
     <!-- Footer -->
-    <footer class="footer"></footer>
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <h3 class="footer-logo">Rubin Lab</h3>
+                    <p class="footer-affiliation">
+                        Innovative Genomics Institute<br>
+                        University of California, Berkeley
+                    </p>
+                </div>
+                <div class="footer-links">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <ul>
+                        <li><a href="/research">Research</a></li>
+                        <li><a href="/people">People</a></li>
+                        <li><a href="/publications">Publications</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4 class="footer-heading">Contact</h4>
+                    <p>
+                        Innovative Genomics Institute<br>
+                        2151 Berkeley Way, Room 220<br>
+                        Berkeley, CA 94704<br>
+                        <a href="mailto:brubin@berkeley.edu">brubin@berkeley.edu</a><br>
+                        Bluesky: <a href="https://bsky.app/profile/therubinlab.bsky.social" target="_blank" rel="noopener noreferrer">@therubinlab</a>
+                    </p>
+                </div>
+            </div>
+            <div class="footer-funder">
+                <p class="footer-funder-text">Supported by</p>
+                <div class="footer-funder-logos">
+                    <img src="images/funders/igi.jpg" alt="Innovative Genomics Institute" class="footer-funder-logo" loading="lazy">
+                    <img src="images/funders/jbei.png" alt="Joint BioEnergy Institute" class="footer-funder-logo" loading="lazy">
+                    <img src="images/funders/curci.png" alt="Shurl and Kay Curci Foundation" class="footer-funder-logo" loading="lazy">
+                    <img src="images/funders/doe.png" alt="U.S. Department of Energy" class="footer-funder-logo" loading="lazy">
+                    <img src="images/funders/audacious.png" alt="TED Audacious Project" class="footer-funder-logo" loading="lazy">
+                    <img src="images/funders/helmsley.png" alt="The Helmsley Charitable Trust" class="footer-funder-logo" loading="lazy">
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; <span id="footer-year">2026</span> Rubin Lab. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 
     <script src="js/components.js"></script>
     <script src="js/main.js"></script>
