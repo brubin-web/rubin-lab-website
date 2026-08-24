@@ -1,7 +1,19 @@
 {
-  "lastUpdated": "2026-03-01T00:00:00Z",
+  "lastUpdated": "2026-08-24T17:38:35.676Z",
   "orcidId": "0000-0001-8684-2417",
   "approved": [
+    {
+      "id": "pub-2026-003",
+      "title": "Canonically minimal RNA-guided insertion sequences expand into large elements that disseminate antimicrobial resistance",
+      "authors": "Hu K, Xie B, Yang H, Rubin BE",
+      "journal": "bioRxiv",
+      "year": 2026,
+      "doi": "10.64898/2026.08.14.744561",
+      "links": {
+        "paper": "https://doi.org/10.64898/2026.08.14.744561"
+      },
+      "preprint": true
+    },
     {
       "id": "pub-2026-002",
       "title": "Plasmids weaponize conjugation to eliminate non-permissive recipients",
