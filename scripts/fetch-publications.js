@@ -406,7 +406,7 @@ function findSupersededPreprint(pub, existingData) {
  * approved or rejected — the repo has three copies of one publication from
  * three consecutive Mondays.
  */
-async function fetchOpenIssueDois() {
+async function fetchPendingReviewIds() {
     const token = process.env.GITHUB_TOKEN;
     const repo = process.env.GITHUB_REPOSITORY;
     if (!token || !repo) return new Set();
@@ -420,21 +420,14 @@ async function fetchOpenIssueDois() {
     // exist — GitHub's issue-list index never recovered from the ~1,800 issues
     // opened by the old name-based search. Page newest-first over every issue
     // and filter here instead.
-    const repoResponse = await fetch(`https://api.github.com/repos/${repo}`, { headers });
-    if (!repoResponse.ok) {
-        throw new Error(`GitHub repo lookup error: ${repoResponse.status}`);
-    }
-    // Includes open pull requests, so it's an upper bound on open issues.
-    const expectedOpen = (await repoResponse.json()).open_issues_count || 0;
-
     // 300 most recent issues. Anything still awaiting review is recent; the
     // thousand-plus older ones are the historical false-positive flood.
     const MAX_PAGES = 3;
-    const dois = new Set();
-    let found = 0;
-    let page = 1;
+    const ids = new Set();
+    let openOnLastPage = 0;
+    let pagesRead = 0;
 
-    for (; page <= MAX_PAGES && found < expectedOpen; page++) {
+    for (let page = 1; page <= MAX_PAGES; page++) {
         const url =
             `https://api.github.com/repos/${repo}/issues` +
             `?state=all&sort=created&direction=desc&per_page=100&page=${page}`;
@@ -447,27 +440,37 @@ async function fetchOpenIssueDois() {
         const issues = await response.json();
         if (issues.length === 0) break;
 
+        pagesRead = page;
+        openOnLastPage = 0;
+
         for (const issue of issues) {
             if (issue.state !== 'open' || issue.pull_request) continue;
-            found++;
+            openOnLastPage++;
 
             const labels = (issue.labels || []).map((l) => (typeof l === 'string' ? l : l.name));
             if (!labels.includes('publication')) continue;
 
-            const match = (issue.body || '').match(/\*\*DOI:\*\*\s*(\S+)/);
-            if (match) dois.add(normalizeDoi(match[1]));
+            const body = issue.body || '';
+            const doi = body.match(/\*\*DOI:\*\*\s*(\S+)/);
+            if (doi) ids.add(normalizeDoi(doi[1]));
+
+            // Some records only ever carry a PMID.
+            const pmid = body.match(/\*\*PMID:\*\*\s*(\S+)/);
+            if (pmid) ids.add(`pmid:${pmid[1].trim()}`);
         }
     }
 
-    if (found < expectedOpen && page > MAX_PAGES) {
+    // Only a page that both filled the window and still held open issues
+    // suggests there are older ones we didn't reach.
+    if (pagesRead === MAX_PAGES && openOnLastPage > 0) {
         console.log(
-            `::warning::Stopped after ${MAX_PAGES} pages of issues having found ${found} of ` +
-            `${expectedOpen} open ones; a duplicate review issue is possible.`
+            `::warning::Only the ${MAX_PAGES * 100} most recent issues were checked and the oldest ` +
+            'page still held open ones; a duplicate review issue is possible.'
         );
     }
 
-    console.log(`${dois.size} publication(s) already awaiting review`);
-    return dois;
+    console.log(`${ids.size} publication(s) already awaiting review`);
+    return ids;
 }
 
 /**
@@ -607,9 +610,12 @@ function dedupe(allFetched) {
         const current = merged[index];
 
         // When a work turns up as both a preprint and a journal article, the
-        // journal version is the one to describe it. Otherwise prefer the
-        // richest source.
-        const rank = (p) => (p.preprint ? 10 : 0) + bySource[p.source];
+        // journal version is the one to describe it. Only sources that report
+        // preprint status get a say — ORCID and PubMed leave the field unset,
+        // which must not be read as "this is a journal article".
+        const knowsPreprintStatus = (p) => p.source === 'crossref' || p.source === 'europepmc';
+        const rank = (p) => (knowsPreprintStatus(p) && p.preprint ? 10 : 0) + bySource[p.source];
+
         const winner = rank(pub) < rank(current) ? { ...pub } : current;
         const loser = winner === current ? pub : current;
 
@@ -618,8 +624,17 @@ function dedupe(allFetched) {
         winner.authors = winner.authors || loser.authors;
         winner.journal = winner.journal || loser.journal;
         winner.year = winner.year || loser.year;
-        winner.supersededBy = [...(winner.supersededBy || []), ...(loser.supersededBy || [])];
         winner.hasPreprint = [...(winner.hasPreprint || []), ...(loser.hasPreprint || [])];
+
+        // A merged record must not claim to be superseded by itself.
+        winner.supersededBy = [...(winner.supersededBy || []), ...(loser.supersededBy || [])]
+            .filter((doi) => doi !== winner.doi);
+
+        // Preprint status survives the merge only if the winner came from a
+        // source that reports it; otherwise inherit what the loser knew.
+        if (!knowsPreprintStatus(winner)) {
+            winner.preprint = loser.preprint;
+        }
 
         merged[index] = winner;
     }
@@ -756,7 +771,14 @@ async function main() {
         }
     }
 
-    const openIssueDois = await fetchOpenIssueDois();
+    // Best-effort: this only avoids a duplicate issue, so a GitHub hiccup here
+    // must not cost us the publications we just found.
+    let pendingReviewIds = new Set();
+    try {
+        pendingReviewIds = await fetchPendingReviewIds();
+    } catch (error) {
+        console.log(`::warning::Could not check for open review issues (${error.message}); a duplicate is possible.`);
+    }
 
     // Final pass: drop anything the resolution steps turned into a duplicate
     const seen = new Set();
@@ -765,8 +787,11 @@ async function main() {
         if (seen.has(key)) return false;
         seen.add(key);
 
-        if (pub.doi && openIssueDois.has(pub.doi)) {
-            console.log(`  skip (review issue already open): ${pub.doi}`);
+        if (
+            (pub.doi && pendingReviewIds.has(pub.doi)) ||
+            (pub.pmid && pendingReviewIds.has(`pmid:${pub.pmid}`))
+        ) {
+            console.log(`  skip (review issue already open): ${pub.doi || pub.pmid}`);
             return false;
         }
 

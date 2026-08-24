@@ -208,6 +208,12 @@
      * Show error state
      */
     function showError(message) {
+        // The "bold means lab member" note explains a list that isn't there.
+        const note = document.getElementById('publications-note');
+        if (note) {
+            note.style.display = 'none';
+        }
+
         const container = document.getElementById(CONTAINER_ID);
         if (container) {
             container.innerHTML = `

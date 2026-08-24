@@ -30,6 +30,13 @@ function parseCommand(comment) {
     const approveMatch = comment.match(/\/approve\s+(doi:|pmid:)(\S+)/i);
     const rejectMatch = comment.match(/\/reject\s+(doi:|pmid:)(\S+)/i);
 
+    // A reply sent by email can carry the quoted issue text, which contains
+    // both commands. Guessing which one was meant risks publishing something
+    // that was being rejected, so refuse instead.
+    if (approveMatch && rejectMatch) {
+        return { ambiguous: true };
+    }
+
     if (approveMatch) {
         return {
             action: 'approve',
@@ -165,10 +172,22 @@ async function main() {
         process.exit(1);
     }
 
+    // Anything the reviewer needs to know goes out as `problem`, and the
+    // workflow posts it on the issue. Exiting non-zero instead would skip that
+    // step, leaving a red badge and no explanation on the issue itself.
+    const refuse = (message) => {
+        console.error(message);
+        setOutput('problem', message);
+        process.exit(0);
+    };
+
     const command = parseCommand(comment);
     if (!command) {
-        console.log('No valid command found in comment');
-        process.exit(0);
+        refuse('I could not read that command. Use `/approve doi:<DOI>` or `/reject doi:<DOI>` exactly as written in the issue above.');
+    }
+
+    if (command.ambiguous) {
+        refuse('That comment contains both `/approve` and `/reject`, so I did nothing. If you replied by email, the quoted issue text came along — put a single command on the first line and delete the rest.');
     }
 
     console.log(`Processing command: ${command.action} ${command.idType}:${command.idValue}`);
@@ -177,16 +196,14 @@ async function main() {
     console.log('Publication details:', pubDetails);
 
     if (!pubDetails.title) {
-        console.error('Could not parse a title from the issue body; refusing to edit publications.json');
-        process.exit(1);
+        refuse('I could not find a publication title in this issue, so nothing was changed.');
     }
 
     // The comment names the record being acted on; make sure it matches the
     // issue body so a stray /approve on the wrong issue can't add a mismatch.
     const commentDoi = command.idType === 'doi' ? normalizeDoi(command.idValue) : null;
     if (commentDoi && pubDetails.doi && commentDoi !== pubDetails.doi) {
-        console.error(`Comment DOI (${commentDoi}) does not match issue DOI (${pubDetails.doi})`);
-        process.exit(1);
+        refuse(`The DOI in your comment (\`${commentDoi}\`) doesn't match the one in this issue (\`${pubDetails.doi}\`), so nothing was changed.`);
     }
 
     const data = loadPublications();
@@ -219,9 +236,24 @@ async function main() {
     const supersededIndex = findSupersededIndex(list, pubDetails);
 
     if (supersededIndex !== -1) {
-        // Reuse the existing id so any external references stay valid.
-        publication.id = list[supersededIndex].id;
         const previous = list[supersededIndex];
+
+        // Reuse the existing id so any external references stay valid.
+        publication.id = previous.id;
+
+        // Carry over anything that was curated by hand and can't be recovered
+        // from publisher metadata — PDF/data/code links, a PMID the new record
+        // lacks. The new paper link wins.
+        publication.links = { ...(previous.links || {}), ...publication.links };
+        publication.pmid = publication.pmid || previous.pmid;
+        if (!publication.pmid) delete publication.pmid;
+
+        // A journal version is no longer a preprint, but replacing one
+        // preprint with another keeps the badge.
+        if (!pubDetails.preprint && previous.preprint && publication.doi !== normalizeDoi(previous.doi)) {
+            delete publication.preprint;
+        }
+
         list[supersededIndex] = publication;
         console.log(`Replaced "${previous.title}" (${previous.doi}) with "${publication.title}" (${publication.doi})`);
     } else if (command.action === 'approve') {
