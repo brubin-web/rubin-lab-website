@@ -411,25 +411,59 @@ async function fetchOpenIssueDois() {
     const repo = process.env.GITHUB_REPOSITORY;
     if (!token || !repo) return new Set();
 
-    const url = `https://api.github.com/repos/${repo}/issues?state=open&labels=publication&per_page=100`;
+    const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/vnd.github+json'
+    };
 
-    const response = await fetch(url, {
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Accept': 'application/vnd.github+json'
+    // `state=open` returns an empty list on this repo even though open issues
+    // exist — GitHub's issue-list index never recovered from the ~1,800 issues
+    // opened by the old name-based search. Page newest-first over every issue
+    // and filter here instead.
+    const repoResponse = await fetch(`https://api.github.com/repos/${repo}`, { headers });
+    if (!repoResponse.ok) {
+        throw new Error(`GitHub repo lookup error: ${repoResponse.status}`);
+    }
+    // Includes open pull requests, so it's an upper bound on open issues.
+    const expectedOpen = (await repoResponse.json()).open_issues_count || 0;
+
+    // 300 most recent issues. Anything still awaiting review is recent; the
+    // thousand-plus older ones are the historical false-positive flood.
+    const MAX_PAGES = 3;
+    const dois = new Set();
+    let found = 0;
+    let page = 1;
+
+    for (; page <= MAX_PAGES && found < expectedOpen; page++) {
+        const url =
+            `https://api.github.com/repos/${repo}/issues` +
+            `?state=all&sort=created&direction=desc&per_page=100&page=${page}`;
+
+        const response = await fetch(url, { headers });
+        if (!response.ok) {
+            throw new Error(`GitHub issue list error: ${response.status}`);
         }
-    });
 
-    if (!response.ok) {
-        throw new Error(`GitHub issue list error: ${response.status}`);
+        const issues = await response.json();
+        if (issues.length === 0) break;
+
+        for (const issue of issues) {
+            if (issue.state !== 'open' || issue.pull_request) continue;
+            found++;
+
+            const labels = (issue.labels || []).map((l) => (typeof l === 'string' ? l : l.name));
+            if (!labels.includes('publication')) continue;
+
+            const match = (issue.body || '').match(/\*\*DOI:\*\*\s*(\S+)/);
+            if (match) dois.add(normalizeDoi(match[1]));
+        }
     }
 
-    const issues = await response.json();
-    const dois = new Set();
-
-    for (const issue of issues) {
-        const match = (issue.body || '').match(/\*\*DOI:\*\*\s*(\S+)/);
-        if (match) dois.add(normalizeDoi(match[1]));
+    if (found < expectedOpen && page > MAX_PAGES) {
+        console.log(
+            `::warning::Stopped after ${MAX_PAGES} pages of issues having found ${found} of ` +
+            `${expectedOpen} open ones; a duplicate review issue is possible.`
+        );
     }
 
     console.log(`${dois.size} publication(s) already awaiting review`);
