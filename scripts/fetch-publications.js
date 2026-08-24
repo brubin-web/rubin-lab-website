@@ -669,9 +669,12 @@ async function main() {
         const fileContent = fs.readFileSync(PUBLICATIONS_FILE, 'utf-8');
         existingData = JSON.parse(fileContent);
     } catch (error) {
+        // Exiting 0 here would report "no new publications" for a file that
+        // simply failed to parse.
         console.error('Error loading publications file:', error.message);
+        console.log('::error::Could not read data/publications.json.');
         setOutput(0);
-        process.exit(0);
+        process.exit(1);
     }
 
     // Fetch from all sources
