@@ -66,8 +66,13 @@ function crossrefToPublication(item) {
         item.institution?.[0]?.name ||
         (isPreprint ? 'Preprint' : '');
 
-    // Crossref links a preprint to its peer-reviewed version once it appears.
+    // Crossref links a preprint to its peer-reviewed version once it appears,
+    // and the journal version back to the preprint. Neither relation is
+    // deposited immediately, so we can't rely on either one alone.
     const supersededBy = (item.relation?.['is-preprint-of'] || [])
+        .map((r) => normalizeDoi(r.id))
+        .filter(Boolean);
+    const hasPreprint = (item.relation?.['has-preprint'] || [])
         .map((r) => normalizeDoi(r.id))
         .filter(Boolean);
 
@@ -80,6 +85,7 @@ function crossrefToPublication(item) {
         pmid: null,
         preprint: isPreprint,
         supersededBy,
+        hasPreprint,
         source: 'crossref'
     };
 }
@@ -101,7 +107,8 @@ async function fetchCrossrefWork(doi) {
 async function fetchCrossrefPublications() {
     // No `select=` here: Crossref rejects `institution` as a selectable field,
     // and that's where a preprint's server name (bioRxiv/medRxiv) lives.
-    const url = `https://api.crossref.org/works?filter=orcid:${ORCID_ID}&rows=200`;
+    // Newest first, so a record longer than one page can't hide a new paper.
+    const url = `https://api.crossref.org/works?filter=orcid:${ORCID_ID}&rows=200&sort=created&order=desc`;
 
     try {
         const response = await fetch(url, { headers: { 'User-Agent': CROSSREF_UA } });
@@ -111,7 +118,18 @@ async function fetchCrossrefPublications() {
 
         const data = await response.json();
         const items = data.message?.items || [];
+        const total = data.message?.['total-results'] ?? items.length;
         const publications = items.map(crossrefToPublication).filter((p) => p.title);
+
+        if (total > items.length) {
+            console.log(`::warning::Crossref has ${total} works but only ${items.length} were read.`);
+        }
+
+        // An empty 200 response looks exactly like "nothing new", which is the
+        // bug this source was added to fix. Treat it as a failure instead.
+        if (publications.length === 0) {
+            throw new Error('Crossref returned no works for this ORCID iD');
+        }
 
         console.log(`Fetched ${publications.length} publications from Crossref`);
         return publications;
@@ -120,6 +138,54 @@ async function fetchCrossrefPublications() {
         // source otherwise looks identical to "no new publications".
         console.error('Error fetching from Crossref:', error.message);
         return null;
+    }
+}
+
+/**
+ * Fetch publications from Europe PMC by author name, restricted to the lab's
+ * affiliations.
+ *
+ * Crossref's ORCID filter only sees works whose publisher deposited the ORCID
+ * iD, which misses papers where Ben is a middle author — the 2023 Nature
+ * Communications paper, for one. A bare name search is unusable (at least two
+ * other researchers publish as "Rubin BE"), but adding the affiliation makes
+ * it precise enough that the occasional stray can just be rejected.
+ */
+async function fetchEuropePmcPublications() {
+    const query = 'AUTH:"Rubin BE" AND (AFF:"Berkeley" OR AFF:"Innovative Genomics")';
+    const url =
+        'https://www.ebi.ac.uk/europepmc/webservices/rest/search' +
+        `?query=${encodeURIComponent(query)}&format=json&pageSize=100&resultType=lite`;
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Europe PMC API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const results = data.resultList?.result || [];
+
+        const publications = results
+            // Europe PMC also matches consortium credits (the IGI SARS-CoV-2
+            // Testing Consortium, say), where he isn't a named author.
+            .filter((r) => /\bRubin BE\b/.test(r.authorString || ''))
+            .map((r) => ({
+            title: (r.title || '').replace(/<[^>]+>/g, '').replace(/\.$/, '').trim(),
+            authors: (r.authorString || '').replace(/\.$/, '').trim(),
+            year: r.pubYear ? parseInt(r.pubYear, 10) : null,
+            journal: r.journalTitle || (r.source === 'PPR' ? 'Preprint' : ''),
+            doi: normalizeDoi(r.doi),
+            pmid: r.pmid || null,
+            preprint: r.source === 'PPR',
+            source: 'europepmc'
+        })).filter((p) => p.title);
+
+        console.log(`Fetched ${publications.length} publications from Europe PMC`);
+        return publications;
+    } catch (error) {
+        console.error('Error fetching from Europe PMC:', error.message);
+        return [];
     }
 }
 
@@ -307,6 +373,70 @@ function findExisting(pub, existingData) {
 }
 
 /**
+ * If this journal article is the published version of a preprint already on
+ * the site, return that preprint entry so it can be replaced rather than
+ * duplicated.
+ *
+ * Crossref's `has-preprint` relation is the reliable signal but only appears
+ * some weeks after publication, so fall back to a title match — bioRxiv titles
+ * usually survive peer review unchanged.
+ */
+function findSupersededPreprint(pub, existingData) {
+    if (pub.preprint) return null;
+
+    const approved = existingData.approved || [];
+
+    // Nothing to upgrade if this exact article is already listed.
+    if (approved.some((e) => normalizeDoi(e.doi) === pub.doi)) return null;
+
+    const byRelation = approved.find(
+        (e) => e.preprint && (pub.hasPreprint || []).includes(normalizeDoi(e.doi))
+    );
+    if (byRelation) return byRelation;
+
+    return approved.find(
+        (e) => e.preprint && normalizeTitle(e.title) && normalizeTitle(e.title) === normalizeTitle(pub.title)
+    ) || null;
+}
+
+/**
+ * DOIs that already have an open review issue.
+ *
+ * Without this the weekly run re-opens an identical issue for anything not yet
+ * approved or rejected — the repo has three copies of one publication from
+ * three consecutive Mondays.
+ */
+async function fetchOpenIssueDois() {
+    const token = process.env.GITHUB_TOKEN;
+    const repo = process.env.GITHUB_REPOSITORY;
+    if (!token || !repo) return new Set();
+
+    const url = `https://api.github.com/repos/${repo}/issues?state=open&labels=publication&per_page=100`;
+
+    const response = await fetch(url, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/vnd.github+json'
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error(`GitHub issue list error: ${response.status}`);
+    }
+
+    const issues = await response.json();
+    const dois = new Set();
+
+    for (const issue of issues) {
+        const match = (issue.body || '').match(/\*\*DOI:\*\*\s*(\S+)/);
+        if (match) dois.add(normalizeDoi(match[1]));
+    }
+
+    console.log(`${dois.size} publication(s) already awaiting review`);
+    return dois;
+}
+
+/**
  * Generate issue body for a new publication.
  *
  * The `replaces` marker is read back by approve-publication.js so approving a
@@ -419,27 +549,45 @@ function setOutput(count) {
  * Merge the per-source results, preferring the richest record for each work
  */
 function dedupe(allFetched) {
-    const bySource = { crossref: 0, pubmed: 1, orcid: 2 };
-    const byKey = new Map();
+    const bySource = { crossref: 0, pubmed: 1, europepmc: 2, orcid: 3 };
+    const merged = [];
+
+    // Sources describe the same work differently, so match on any identifier
+    // rather than a single key — otherwise one paper becomes two issues.
+    const sameWork = (a, b) =>
+        (a.doi && b.doi && a.doi === b.doi) ||
+        (a.pmid && b.pmid && String(a.pmid) === String(b.pmid)) ||
+        (normalizeTitle(a.title) && normalizeTitle(a.title) === normalizeTitle(b.title));
 
     for (const pub of allFetched) {
-        const key = pub.doi || (pub.pmid ? `pmid:${pub.pmid}` : normalizeTitle(pub.title));
-        const current = byKey.get(key);
+        const index = merged.findIndex((m) => sameWork(m, pub));
 
-        if (!current) {
-            byKey.set(key, pub);
+        if (index === -1) {
+            merged.push({ ...pub });
             continue;
         }
 
-        // Keep the most trusted record, but carry over a PMID the winner lacks.
-        if (bySource[pub.source] < bySource[current.source]) {
-            byKey.set(key, { ...pub, pmid: pub.pmid || current.pmid });
-        } else if (!current.pmid && pub.pmid) {
-            current.pmid = pub.pmid;
-        }
+        const current = merged[index];
+
+        // When a work turns up as both a preprint and a journal article, the
+        // journal version is the one to describe it. Otherwise prefer the
+        // richest source.
+        const rank = (p) => (p.preprint ? 10 : 0) + bySource[p.source];
+        const winner = rank(pub) < rank(current) ? { ...pub } : current;
+        const loser = winner === current ? pub : current;
+
+        winner.doi = winner.doi || loser.doi;
+        winner.pmid = winner.pmid || loser.pmid;
+        winner.authors = winner.authors || loser.authors;
+        winner.journal = winner.journal || loser.journal;
+        winner.year = winner.year || loser.year;
+        winner.supersededBy = [...(winner.supersededBy || []), ...(loser.supersededBy || [])];
+        winner.hasPreprint = [...(winner.hasPreprint || []), ...(loser.hasPreprint || [])];
+
+        merged[index] = winner;
     }
 
-    return [...byKey.values()];
+    return merged;
 }
 
 /**
@@ -458,7 +606,11 @@ function findPreprintUpgrades(uniquePubs, existingData) {
             );
             if (!preprintEntry) continue;
 
-            const alreadyListed = approved.some((e) => normalizeDoi(e.doi) === publishedDoi);
+            // Includes the rejected list: a journal version turned down once
+            // must not come back every Monday.
+            const alreadyListed = allKnownPublications(existingData).some(
+                (e) => normalizeDoi(e.doi) === publishedDoi
+            );
             if (alreadyListed) continue;
 
             upgrades.push({ publishedDoi, replaces: normalizeDoi(preprintEntry.doi) });
@@ -486,8 +638,9 @@ async function main() {
     }
 
     // Fetch from all sources
-    const [crossrefPubs, orcidPubs, pubmedPubs] = await Promise.all([
+    const [crossrefPubs, europePmcPubs, orcidPubs, pubmedPubs] = await Promise.all([
         fetchCrossrefPublications(),
+        fetchEuropePmcPublications(),
         fetchOrcidPublications(),
         fetchPubmedPublications()
     ]);
@@ -496,7 +649,7 @@ async function main() {
     // instead of quietly reporting "no new publications".
     const crossrefFailed = crossrefPubs === null;
 
-    const uniquePubs = dedupe([...(crossrefPubs || []), ...pubmedPubs, ...orcidPubs]);
+    const uniquePubs = dedupe([...(crossrefPubs || []), ...pubmedPubs, ...europePmcPubs, ...orcidPubs]);
 
     console.log(`\nTotal unique publications found: ${uniquePubs.length}`);
 
@@ -506,10 +659,22 @@ async function main() {
     const isDataDeposit = pub => pub.doi && DATA_REPO_DOI.test(pub.doi);
 
     const candidates = [];
+    let upgradeFailures = 0;
 
     for (const pub of uniquePubs) {
         if (isDataDeposit(pub)) {
             console.log(`  skip (data deposit): ${pub.doi}`);
+            continue;
+        }
+
+        // Check for a preprint being upgraded before the "already listed"
+        // check, because a journal version usually keeps the preprint's title
+        // and would otherwise be mistaken for the entry it should replace.
+        const superseded = findSupersededPreprint(pub, existingData);
+        if (superseded) {
+            pub.replaces = normalizeDoi(superseded.doi);
+            console.log(`  preprint ${pub.replaces} is now published as ${pub.doi}`);
+            candidates.push(pub);
             continue;
         }
 
@@ -536,7 +701,9 @@ async function main() {
         candidates.push(pub);
     }
 
-    // Preprints already on the site that now have a journal version
+    // Preprints already on the site whose journal version isn't in the feed
+    // (its publisher didn't deposit the ORCID iD), reachable only through the
+    // preprint's own is-preprint-of relation.
     for (const upgrade of findPreprintUpgrades(uniquePubs, existingData)) {
         try {
             const published = await fetchCrossrefWork(upgrade.publishedDoi);
@@ -544,9 +711,12 @@ async function main() {
             console.log(`  preprint ${upgrade.replaces} now published as ${upgrade.publishedDoi}`);
             candidates.push(published);
         } catch (error) {
+            upgradeFailures++;
             console.error(`  could not resolve upgrade ${upgrade.publishedDoi}:`, error.message);
         }
     }
+
+    const openIssueDois = await fetchOpenIssueDois();
 
     // Final pass: drop anything the resolution steps turned into a duplicate
     const seen = new Set();
@@ -554,7 +724,24 @@ async function main() {
         const key = pub.doi || normalizeTitle(pub.title);
         if (seen.has(key)) return false;
         seen.add(key);
-        if (pub.replaces) return true; // upgrades intentionally match an existing entry
+
+        if (pub.doi && openIssueDois.has(pub.doi)) {
+            console.log(`  skip (review issue already open): ${pub.doi}`);
+            return false;
+        }
+
+        // An upgrade legitimately matches the preprint entry it replaces, so
+        // only its own DOI being on record rules it out.
+        if (pub.replaces) {
+            const recorded = allKnownPublications(existingData).some(
+                (e) => normalizeDoi(e.doi) === pub.doi
+            );
+            if (recorded) {
+                console.log(`  skip (upgrade already recorded): ${pub.doi}`);
+            }
+            return !recorded;
+        }
+
         return !findExisting(pub, existingData);
     });
 
@@ -584,7 +771,10 @@ async function main() {
     if (issueFailures > 0) {
         console.log(`::error::${issueFailures} review issue(s) could not be created.`);
     }
-    if (crossrefFailed || issueFailures > 0) {
+    if (upgradeFailures > 0) {
+        console.log(`::error::${upgradeFailures} preprint(s) appear to be published but could not be resolved.`);
+    }
+    if (crossrefFailed || issueFailures > 0 || upgradeFailures > 0) {
         process.exitCode = 1;
     }
 }
@@ -604,6 +794,8 @@ module.exports = {
     formatCrossrefAuthors,
     dedupe,
     findExisting,
+    findSupersededPreprint,
+    findPreprintUpgrades,
     generateIssueBody,
     fetchCrossrefWork,
     createGitHubIssue

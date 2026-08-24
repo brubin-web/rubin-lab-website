@@ -1,0 +1,173 @@
+{
+  "_comment": "Authors on the publications page are shown in bold when they match an entry here. Matching is by surname plus first initial, so it is deliberately tolerant of varying middle initials between papers. Add or remove people here; both the live page and the generated no-JS list read this file.",
+  "members": [
+    {
+      "name": "Ben Rubin",
+      "surname": "Rubin",
+      "initial": "B",
+      "status": "current"
+    },
+    {
+      "name": "Jon Martinson",
+      "surname": "Martinson",
+      "initial": "J",
+      "status": "current"
+    },
+    {
+      "name": "Lindsey Pieper",
+      "surname": "Pieper",
+      "initial": "L",
+      "status": "current"
+    },
+    {
+      "name": "Bingliang Xie",
+      "surname": "Xie",
+      "initial": "B",
+      "status": "current"
+    },
+    {
+      "name": "Kuang Hu",
+      "surname": "Hu",
+      "initial": "K",
+      "status": "current"
+    },
+    {
+      "name": "Madeline Hayes",
+      "surname": "Hayes",
+      "initial": "M",
+      "status": "current"
+    },
+    {
+      "name": "Leo Song",
+      "surname": "Song",
+      "initial": "L",
+      "status": "current"
+    },
+    {
+      "name": "Adrienne Cho",
+      "surname": "Cho",
+      "initial": "A",
+      "status": "current"
+    },
+    {
+      "name": "Isabel Navarro",
+      "surname": "Navarro",
+      "initial": "I",
+      "status": "current"
+    },
+    {
+      "name": "Jigyasa Arora",
+      "surname": "Arora",
+      "initial": "J",
+      "status": "current"
+    },
+    {
+      "name": "Jamie Irvine",
+      "surname": "Irvine",
+      "initial": "J",
+      "status": "current"
+    },
+    {
+      "name": "Audrey Glynn",
+      "surname": "Glynn",
+      "initial": "A",
+      "status": "current"
+    },
+    {
+      "name": "Rachel K. Evans",
+      "surname": "Evans",
+      "initial": "R",
+      "status": "current"
+    },
+    {
+      "name": "Abby Wang",
+      "surname": "Wang",
+      "initial": "A",
+      "status": "current"
+    },
+    {
+      "name": "Aria Kim",
+      "surname": "Kim",
+      "initial": "A",
+      "status": "current"
+    },
+    {
+      "name": "Varsha Sivanath",
+      "surname": "Sivanath",
+      "initial": "V",
+      "status": "current"
+    },
+    {
+      "name": "Hengyi Yang",
+      "surname": "Yang",
+      "initial": "H",
+      "status": "current"
+    },
+    {
+      "name": "Ashley Killian",
+      "surname": "Killian",
+      "initial": "A",
+      "status": "current"
+    },
+    {
+      "name": "Sarah Hasham",
+      "surname": "Hasham",
+      "initial": "S",
+      "status": "alumnus"
+    },
+    {
+      "name": "Danh Tran",
+      "surname": "Tran",
+      "initial": "D",
+      "status": "alumnus"
+    },
+    {
+      "name": "Amanda Alker",
+      "surname": "Alker",
+      "initial": "A",
+      "status": "alumnus"
+    },
+    {
+      "name": "Agnès Oromí-Bosch",
+      "surname": "Oromí-Bosch",
+      "initial": "A",
+      "status": "alumnus"
+    },
+    {
+      "name": "Emily Qi",
+      "surname": "Qi",
+      "initial": "E",
+      "status": "alumnus"
+    },
+    {
+      "name": "Christine Corry",
+      "surname": "Corry",
+      "initial": "C",
+      "status": "alumnus"
+    },
+    {
+      "name": "Alex Mendez",
+      "surname": "Mendez",
+      "initial": "A",
+      "status": "alumnus"
+    },
+    {
+      "name": "Madison Williams",
+      "surname": "Williams",
+      "initial": "M",
+      "status": "alumnus"
+    },
+    {
+      "name": "Zoë Chan",
+      "surname": "Chan",
+      "initial": "Z",
+      "status": "alumnus"
+    },
+    {
+      "name": "Sara Smith",
+      "surname": "Smith",
+      "initial": "S",
+      "status": "alumnus"
+    }
+  ]
+}

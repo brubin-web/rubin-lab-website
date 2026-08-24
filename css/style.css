@@ -1080,6 +1080,12 @@ ul {
 /* ============================================
    Publications Page
    ============================================ */
+.publications-note {
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-600);
+    margin-bottom: var(--spacing-2xl);
+}
+
 .publications-year {
     margin-bottom: var(--spacing-3xl);
 }

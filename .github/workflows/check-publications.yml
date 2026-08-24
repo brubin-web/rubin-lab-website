@@ -17,10 +17,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '22'
 
@@ -34,5 +34,7 @@ jobs:
         run: node fetch-publications.js
 
       # When a new publication is found, this workflow opens a GitHub issue
-      # (labeled "publication"). GitHub's own notifications email the repo
-      # owner about new issues, so no separate SMTP mail step is needed.
+      # (labeled "publication") assigned to the repo owner and @-mentioning
+      # them, which is what generates the review email. Merely opening an issue
+      # notifies only people watching the repo with "All Activity", so the
+      # assignment and mention are what make the email reliable.

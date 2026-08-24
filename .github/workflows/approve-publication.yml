@@ -8,27 +8,31 @@ permissions:
   contents: write
   issues: write
 
+# Two /approve comments in quick succession would otherwise race each other to
+# push to main, and the loser fails on a non-fast-forward.
+concurrency:
+  group: publications-update
+  cancel-in-progress: false
+
 jobs:
   handle-approval:
     # Only run on issues with the 'publication' label, and only for commands
-    # from someone who can write to this repo. Without the author_association
-    # check, any GitHub user could comment "/approve" on a public issue and get
-    # arbitrary content committed to the live site.
+    # from the repo owner. Without an author check, any GitHub user could
+    # comment "/approve" on a public issue and get arbitrary content committed
+    # to the live site.
     if: |
       github.event.issue.pull_request == null &&
       contains(github.event.issue.labels.*.name, 'publication') &&
-      (github.event.comment.author_association == 'OWNER' ||
-       github.event.comment.author_association == 'MEMBER' ||
-       github.event.comment.author_association == 'COLLABORATOR') &&
+      github.event.comment.user.login == github.repository_owner &&
       (contains(github.event.comment.body, '/approve') || contains(github.event.comment.body, '/reject'))
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '22'
 
@@ -58,11 +62,15 @@ jobs:
             -m "Update publications: $PUB_ACTION publication" \
             -m "Issue: #$ISSUE_NUMBER" \
             -m "Title: $PUB_TITLE"
+          git pull --rebase --autostash origin main
           git push
 
+      # These gate on what the script actually did, not on the comment text: a
+      # bare "/approve" with no doi:/pmid: is a no-op, and closing the issue
+      # with a success message would lose the publication from the queue.
       - name: Close issue on approval
-        if: contains(github.event.comment.body, '/approve')
-        uses: actions/github-script@v7
+        if: steps.process.outputs.action == 'approve'
+        uses: actions/github-script@v8
         with:
           script: |
             await github.rest.issues.update({
@@ -80,8 +88,8 @@ jobs:
             });
 
       - name: Close issue on rejection
-        if: contains(github.event.comment.body, '/reject')
-        uses: actions/github-script@v7
+        if: steps.process.outputs.action == 'reject'
+        uses: actions/github-script@v8
         with:
           script: |
             await github.rest.issues.update({
@@ -96,4 +104,16 @@ jobs:
               repo: context.repo.repo,
               issue_number: context.issue.number,
               body: '❌ Publication rejected. It will not appear on the website and won\'t be suggested again.'
+            });
+
+      - name: Explain an unrecognised command
+        if: steps.process.outputs.action == ''
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: 'I could not read that command, so nothing was changed. Use `/approve doi:<DOI>` or `/reject doi:<DOI>` exactly as written in the issue above.'
             });

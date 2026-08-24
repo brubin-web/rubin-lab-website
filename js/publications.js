@@ -7,14 +7,77 @@
     'use strict';
 
     const PUBLICATIONS_URL = 'data/publications.json';
+    const LAB_MEMBERS_URL = 'data/lab-members.json';
     const CONTAINER_ID = 'publications-container';
     const ORCID_URL = 'https://orcid.org/0000-0001-8684-2417';
 
+    // Surname + first initial of every current and former lab member, so their
+    // names can be bolded in author lists. Falls back to the PI alone if the
+    // roster can't be loaded.
+    let labMemberKeys = new Set(['rubin|B']);
+
     /**
-     * Format author string with bold highlighting for Rubin BE
+     * Escape text before it goes into innerHTML. Publication data comes from
+     * publisher metadata, so it must not be trusted as markup.
+     */
+    function escapeHtml(text) {
+        return String(text == null ? '' : text)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    /**
+     * "Martinson JNV" -> "martinson|J". Matching on the first initial only
+     * keeps working when a paper spells out more middle initials than another.
+     */
+    function authorKey(author) {
+        const parts = author.trim().split(/\s+/);
+        if (parts.length < 2) return null;
+
+        const initials = parts[parts.length - 1];
+        if (!/^[A-Za-z]/.test(initials)) return null;
+
+        const surname = parts.slice(0, -1).join(' ');
+        return `${surname.toLowerCase()}|${initials[0].toUpperCase()}`;
+    }
+
+    /**
+     * Format an author string, bolding current and former lab members
      */
     function formatAuthors(authors) {
-        return authors.replace(/Rubin BE/g, '<strong>Rubin BE</strong>');
+        return String(authors == null ? '' : authors)
+            .split(/,\s*/)
+            .filter((name) => name.length > 0)
+            .map((name) => {
+                const key = authorKey(name);
+                const safe = escapeHtml(name);
+                return key && labMemberKeys.has(key) ? `<strong>${safe}</strong>` : safe;
+            })
+            .join(', ');
+    }
+
+    /**
+     * Load the lab roster used for bolding author names
+     */
+    async function loadLabMembers() {
+        try {
+            const response = await fetch(LAB_MEMBERS_URL);
+            if (!response.ok) return;
+
+            const data = await response.json();
+            const keys = (data.members || [])
+                .filter((m) => m.surname && m.initial)
+                .map((m) => `${m.surname.toLowerCase()}|${m.initial.toUpperCase()}`);
+
+            if (keys.length > 0) {
+                labMemberKeys = new Set(keys);
+            }
+        } catch (error) {
+            console.error('Could not load lab members; bolding the PI only:', error);
+        }
     }
 
     /**
@@ -38,7 +101,7 @@
             .filter(([key, url]) => url && url !== '#')
             .map(([key, url]) => {
                 const label = linkLabels[key] || key.charAt(0).toUpperCase() + key.slice(1);
-                return `<a href="${url}" class="publication-link" target="_blank" rel="noopener">${label}</a>`;
+                return `<a href="${escapeHtml(url)}" class="publication-link" target="_blank" rel="noopener">${escapeHtml(label)}</a>`;
             })
             .join('\n                        ');
 
@@ -49,19 +112,19 @@
      * Create a single publication item HTML
      */
     function createPublicationHTML(pub) {
-        const doiLink = pub.doi ? `https://doi.org/${pub.doi}` : '#';
+        const doiLink = pub.doi ? escapeHtml(`https://doi.org/${pub.doi}`) : '#';
         const linksHTML = createLinksHTML(pub.links);
 
         return `
                 <article class="publication-item">
                     <h3 class="publication-title">
-                        <a href="${doiLink}"${pub.doi ? ' target="_blank" rel="noopener"' : ''}>${pub.title}</a>
+                        <a href="${doiLink}"${pub.doi ? ' target="_blank" rel="noopener"' : ''}>${escapeHtml(pub.title)}</a>
                     </h3>
                     <p class="publication-authors">
                         ${formatAuthors(pub.authors)}
                     </p>
                     <p class="publication-journal">
-                        <em>${pub.journal}</em> (${pub.year})${pub.preprint ? ' <span class="publication-badge">Preprint</span>' : ''}
+                        <em>${escapeHtml(pub.journal)}</em> (${escapeHtml(pub.year)})${pub.preprint ? ' <span class="publication-badge">Preprint</span>' : ''}
                     </p>
                     ${linksHTML}
                 </article>`;
@@ -110,7 +173,7 @@
         years.forEach(year => {
             html += `
             <div class="publications-year">
-                <h2 class="publications-year-title">${year}</h2>
+                <h2 class="publications-year-title">${escapeHtml(year)}</h2>
                 ${grouped[year].map(createPublicationHTML).join('')}
             </div>`;
         });
@@ -168,6 +231,8 @@
         showLoading();
 
         try {
+            await loadLabMembers();
+
             const response = await fetch(PUBLICATIONS_URL);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);

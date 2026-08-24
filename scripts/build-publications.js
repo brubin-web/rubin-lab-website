@@ -18,6 +18,7 @@ const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
 const PUBLICATIONS_FILE = path.join(ROOT, 'data', 'publications.json');
+const LAB_MEMBERS_FILE = path.join(ROOT, 'data', 'lab-members.json');
 const PUBLICATIONS_HTML = path.join(ROOT, 'publications.html');
 const ORCID_URL = 'https://orcid.org/0000-0001-8684-2417';
 
@@ -29,9 +30,44 @@ function escapeHtml(text) {
         .replace(/"/g, '&quot;');
 }
 
-// Matches js/publications.js, which bolds the lab PI in the author list.
+// Keep in step with js/publications.js, which applies the same rule at runtime.
+function loadLabMemberKeys() {
+    try {
+        const data = JSON.parse(fs.readFileSync(LAB_MEMBERS_FILE, 'utf8'));
+        const keys = (data.members || [])
+            .filter((m) => m.surname && m.initial)
+            .map((m) => `${m.surname.toLowerCase()}|${m.initial.toUpperCase()}`);
+        if (keys.length > 0) return new Set(keys);
+    } catch (error) {
+        console.warn(`Could not read ${LAB_MEMBERS_FILE}; bolding the PI only.`);
+    }
+    return new Set(['rubin|B']);
+}
+
+const labMemberKeys = loadLabMemberKeys();
+
+// "Martinson JNV" -> "martinson|J"
+function authorKey(author) {
+    const parts = author.trim().split(/\s+/);
+    if (parts.length < 2) return null;
+
+    const initials = parts[parts.length - 1];
+    if (!/^[A-Za-z]/.test(initials)) return null;
+
+    const surname = parts.slice(0, -1).join(' ');
+    return `${surname.toLowerCase()}|${initials[0].toUpperCase()}`;
+}
+
 function formatAuthors(authors) {
-    return escapeHtml(authors).replace(/Rubin BE/g, '<strong>Rubin BE</strong>');
+    return String(authors == null ? '' : authors)
+        .split(/,\s*/)
+        .filter((name) => name.length > 0)
+        .map((name) => {
+            const key = authorKey(name);
+            const safe = escapeHtml(name);
+            return key && labMemberKeys.has(key) ? `<strong>${safe}</strong>` : safe;
+        })
+        .join(', ');
 }
 
 function publicationHTML(pub) {

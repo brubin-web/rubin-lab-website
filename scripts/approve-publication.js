@@ -64,10 +64,17 @@ function parseIssueBody(body) {
     // preprint that's already listed.
     const replacesMatch = body.match(/<!--\s*replaces:\s*(\S+)\s*-->/);
 
+    // generateIssueBody writes "N/A" for fields a source didn't provide;
+    // that placeholder must not end up rendered on the page.
+    const value = (match) => {
+        const text = match ? match[1].trim() : '';
+        return text === 'N/A' ? '' : text;
+    };
+
     return {
         title: titleMatch ? titleMatch[1].trim() : '',
-        authors: authorsMatch ? authorsMatch[1].trim() : '',
-        journal: journalMatch ? journalMatch[1].trim() : '',
+        authors: value(authorsMatch),
+        journal: value(journalMatch),
         year: yearMatch ? parseInt(yearMatch[1]) : null,
         doi: doiMatch ? normalizeDoi(doiMatch[1]) : null,
         pmid: pmidMatch ? pmidMatch[1].trim() : null,
@@ -124,8 +131,13 @@ function findSupersededIndex(list, pub) {
         if (idx !== -1) return idx;
     }
 
-    if (normalizeTitle(pub.title)) {
-        const idx = list.findIndex((e) => normalizeTitle(e.title) === normalizeTitle(pub.title));
+    // Title fallback only for a journal version taking over from a preprint.
+    // Matching any same-titled entry would let one publication silently
+    // overwrite an unrelated one.
+    if (!pub.preprint && normalizeTitle(pub.title)) {
+        const idx = list.findIndex(
+            (e) => e.preprint && normalizeTitle(e.title) === normalizeTitle(pub.title)
+        );
         if (idx !== -1) return idx;
     }
 
