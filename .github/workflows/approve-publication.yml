@@ -10,10 +10,16 @@ permissions:
 
 jobs:
   handle-approval:
-    # Only run on issues with the 'publication' label
+    # Only run on issues with the 'publication' label, and only for commands
+    # from someone who can write to this repo. Without the author_association
+    # check, any GitHub user could comment "/approve" on a public issue and get
+    # arbitrary content committed to the live site.
     if: |
       github.event.issue.pull_request == null &&
       contains(github.event.issue.labels.*.name, 'publication') &&
+      (github.event.comment.author_association == 'OWNER' ||
+       github.event.comment.author_association == 'MEMBER' ||
+       github.event.comment.author_association == 'COLLABORATOR') &&
       (contains(github.event.comment.body, '/approve') || contains(github.event.comment.body, '/reject'))
     runs-on: ubuntu-latest
 
@@ -24,7 +30,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Process approval command
         id: process
@@ -36,14 +42,22 @@ jobs:
         run: node approve-publication.js
 
       - name: Commit changes
+        env:
+          PUB_ACTION: ${{ steps.process.outputs.action }}
+          PUB_TITLE: ${{ steps.process.outputs.title }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add data/publications.json
-          git commit -m "Update publications: ${{ steps.process.outputs.action }} publication
-
-          Issue: #${{ github.event.issue.number }}
-          Title: ${{ steps.process.outputs.title }}"
+          git add data/publications.json publications.html
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit \
+            -m "Update publications: $PUB_ACTION publication" \
+            -m "Issue: #$ISSUE_NUMBER" \
+            -m "Title: $PUB_TITLE"
           git push
 
       - name: Close issue on approval
