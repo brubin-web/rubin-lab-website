@@ -519,6 +519,9 @@ To reject this publication (won't be asked again), comment:
 \`\`\`
 /reject ${command}
 \`\`\`
+
+You can also just reply to the notification email — put the command on the first
+line, above the quoted text.
 ${replacesMarker}
 `.trim();
 }
