@@ -372,6 +372,7 @@ async function createGitHubIssue(pub) {
     }
 
     const url = `https://api.github.com/repos/${repo}/issues`;
+    const owner = repo.split('/')[0];
 
     const shortTitle = pub.title.length > 80 ? `${pub.title.substring(0, 80)}…` : pub.title;
 
@@ -384,8 +385,13 @@ async function createGitHubIssue(pub) {
         },
         body: JSON.stringify({
             title: `[New Publication] ${shortTitle}`,
-            body: generateIssueBody(pub),
-            labels: ['publication', 'pending-review']
+            // Assign and @-mention the owner. Simply opening an issue only
+            // emails people who watch the repo with "All Activity"; assignment
+            // and mentions notify under the default settings too, and this
+            // email *is* the review request the whole pipeline exists for.
+            body: `@${owner}\n\n${generateIssueBody(pub)}`,
+            labels: ['publication', 'pending-review'],
+            assignees: [owner]
         })
     });
 
@@ -599,5 +605,6 @@ module.exports = {
     dedupe,
     findExisting,
     generateIssueBody,
-    fetchCrossrefWork
+    fetchCrossrefWork,
+    createGitHubIssue
 };
