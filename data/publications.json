@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-24T17:38:35.676Z",
+  "lastUpdated": "2026-08-24T18:18:59.134Z",
   "orcidId": "0000-0001-8684-2417",
   "approved": [
     {
@@ -184,5 +184,17 @@
     }
   ],
   "pending": [],
-  "rejected": []
+  "rejected": [
+    {
+      "id": "pub-2026-004",
+      "title": "Workflow test publication",
+      "authors": "Test A, Rubin BE",
+      "journal": "Test Journal",
+      "year": 2026,
+      "doi": "10.0000/workflow-test",
+      "links": {
+        "paper": "https://doi.org/10.0000/workflow-test"
+      }
+    }
+  ]
 }
