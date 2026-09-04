@@ -41,7 +41,7 @@
     {
       "id": "pub-2026-001",
       "title": "Identification of proteins influencing CRISPR-associated transposases for enhanced genome editing",
-      "authors": "Song LCT, Alker ATP, Oromí-Bosch A, Swartz SE, Martinson JNV, Arora J, Wang AM, Rovinsky R, Smith SJ, Pierce EC, Deutschbauer AM, Doudna JA, Cress BF, Rubin BE",
+      "authors": "Song LCT, Alker ATP, Orom\u00ed-Bosch A, Swartz SE, Martinson JNV, Arora J, Wang AM, Rovinsky R, Smith SJ, Pierce EC, Deutschbauer AM, Doudna JA, Cress BF, Rubin BE",
       "journal": "Science Advances",
       "year": 2026,
       "doi": "10.1126/sciadv.aea1429",
@@ -196,17 +196,5 @@
     }
   ],
   "pending": [],
-  "rejected": [
-    {
-      "id": "pub-2026-005",
-      "title": "TEST entry for email-reply parsing",
-      "authors": "Test A, Rubin BE",
-      "journal": "Test",
-      "year": 2026,
-      "doi": "10.9999/test-email-reply-2026",
-      "links": {
-        "paper": "https://doi.org/10.9999/test-email-reply-2026"
-      }
-    }
-  ]
+  "rejected": []
 }
