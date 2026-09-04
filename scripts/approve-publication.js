@@ -23,37 +23,76 @@ function normalizeTitle(title) {
 }
 
 /**
- * Parse command from issue comment
- * Format: /approve doi:10.1234/example or /reject pmid:12345678
+ * Keep only the part of a reply the reviewer actually typed.
+ *
+ * A reply sent by email arrives with the quoted issue text attached, and that
+ * text lists BOTH /approve and /reject as instructions. Parsing the whole body
+ * therefore sees two conflicting commands on every email reply. Strip the
+ * quoted portion first so a one-word reply is unambiguous.
+ */
+function stripQuotedReply(comment) {
+    const lines = comment.split(/\r?\n/);
+    const kept = [];
+
+    // Markers that begin the quoted tail of a mail client's reply. Everything
+    // from here down was written by someone else (or by us), not the reviewer.
+    const tailMarkers = [
+        /^\s*>/,                                   // quoted line
+        /^\s*On\b.*\bwrote:\s*$/i,                 // "On <date>, X wrote:"
+        /^\s*-{2,}\s*Original Message\s*-{2,}/i,   // Outlook
+        /^\s*_{10,}\s*$/,                          // Outlook divider
+        /^\s*--\s*$/,                              // signature delimiter
+        /^\s*(—|-{1,3})\s*$/,                       // GitHub's footer rule
+        /Reply to this email directly/i,
+        /You are receiving this because/i,
+        /view it on GitHub/i,
+        /^\s*##\s*New Publication Detected/i       // the issue body itself
+    ];
+
+    for (const line of lines) {
+        if (tailMarkers.some((re) => re.test(line))) {
+            break;
+        }
+        kept.push(line);
+    }
+
+    return kept.join('\n').trim();
+}
+
+/**
+ * Parse command from issue comment.
+ *
+ * Accepts a full command (`/approve doi:10.1234/example`) or, because one issue
+ * covers exactly one publication, a bare `approve` / `reject` on its own line.
+ * The bare form is what makes a one-word reply to the notification email work.
+ * Requiring the word to be alone on its line keeps prose like "I approve of
+ * publishing this" from triggering anything.
  */
 function parseCommand(comment) {
-    const approveMatch = comment.match(/\/approve\s+(doi:|pmid:)(\S+)/i);
-    const rejectMatch = comment.match(/\/reject\s+(doi:|pmid:)(\S+)/i);
+    const body = stripQuotedReply(comment);
+    const verb = (action) =>
+        new RegExp(`^[ \t]*/?${action}(?:[ \t]+(doi:|pmid:)(\\S+))?[ \t]*\\.?[ \t]*$`, 'im');
 
-    // A reply sent by email can carry the quoted issue text, which contains
-    // both commands. Guessing which one was meant risks publishing something
-    // that was being rejected, so refuse instead.
+    const approveMatch = body.match(verb('approve'));
+    const rejectMatch = body.match(verb('reject'));
+
+    // Both commands still present after stripping the quote means the reviewer
+    // really did type two things. Guessing which one was meant risks publishing
+    // something that was being rejected, so refuse instead.
     if (approveMatch && rejectMatch) {
         return { ambiguous: true };
     }
 
-    if (approveMatch) {
-        return {
-            action: 'approve',
-            idType: approveMatch[1].replace(':', ''),
-            idValue: approveMatch[2]
-        };
+    const match = approveMatch || rejectMatch;
+    if (!match) {
+        return null;
     }
 
-    if (rejectMatch) {
-        return {
-            action: 'reject',
-            idType: rejectMatch[1].replace(':', ''),
-            idValue: rejectMatch[2]
-        };
-    }
-
-    return null;
+    return {
+        action: approveMatch ? 'approve' : 'reject',
+        idType: match[1] ? match[1].replace(':', '') : null,
+        idValue: match[2] || null
+    };
 }
 
 /**
@@ -183,14 +222,23 @@ async function main() {
 
     const command = parseCommand(comment);
     if (!command) {
-        refuse('I could not read that command. Use `/approve doi:<DOI>` or `/reject doi:<DOI>` exactly as written in the issue above.');
+        // The workflow fires on any comment containing "approve" or "reject",
+        // so most misses here are ordinary prose, not a botched command.
+        // Only answer when the reviewer clearly meant to issue one.
+        const attempted = /(^|\s)\/(approve|reject)\b/i.test(comment) ||
+            /^\s*\/?(approve|reject)\b/i.test(stripQuotedReply(comment));
+        if (!attempted) {
+            console.log('Comment is not a command; nothing to do.');
+            process.exit(0);
+        }
+        refuse('I could not read that command. Reply with `approve` or `reject` on a line by itself, or use the full `/approve doi:<DOI>` form.');
     }
 
     if (command.ambiguous) {
-        refuse('That comment contains both `/approve` and `/reject`, so I did nothing. If you replied by email, the quoted issue text came along — put a single command on the first line and delete the rest.');
+        refuse('That comment contains both an approve and a reject command, so I did nothing. Reply again with just one of them on the first line.');
     }
 
-    console.log(`Processing command: ${command.action} ${command.idType}:${command.idValue}`);
+    console.log(`Processing command: ${command.action} ${command.idValue ? `${command.idType}:${command.idValue}` : '(id taken from the issue)'}`);
 
     const pubDetails = parseIssueBody(issueBody);
     console.log('Publication details:', pubDetails);

@@ -513,18 +513,18 @@ ${lines.join('\n')}
 
 ### Actions
 
-To approve this publication and add it to the website, comment:
+**Reply to this email with a single word** — \`approve\` to add it to the website,
+or \`reject\` to never be asked again. Put the word on the first line; the quoted
+text below it is ignored.
+
+Commenting here works too:
+
 \`\`\`
 /approve ${command}
 \`\`\`
-
-To reject this publication (won't be asked again), comment:
 \`\`\`
 /reject ${command}
 \`\`\`
-
-You can also just reply to the notification email — put the command on the first
-line, above the quoted text.
 ${replacesMarker}
 `.trim();
 }

@@ -18,11 +18,16 @@ jobs:
     # from the repo owner. Without an author check, any GitHub user could
     # comment "/approve" on a public issue and get arbitrary content committed
     # to the live site.
+    #
+    # The body test is deliberately loose (no leading slash) so a one-word
+    # "approve" replied straight into the notification email still triggers a
+    # run. The script decides whether it is really a command and stays silent
+    # when it isn't, so prose mentioning the word doesn't get a reply.
     if: |
       github.event.issue.pull_request == null &&
       contains(github.event.issue.labels.*.name, 'publication') &&
       github.event.comment.user.login == github.repository_owner &&
-      (contains(github.event.comment.body, '/approve') || contains(github.event.comment.body, '/reject'))
+      (contains(github.event.comment.body, 'approve') || contains(github.event.comment.body, 'reject'))
     runs-on: ubuntu-latest
 
     steps:
