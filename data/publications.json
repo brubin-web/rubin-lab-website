@@ -1,7 +1,19 @@
 {
-  "lastUpdated": "2026-08-24T18:18:59.134Z",
+  "lastUpdated": "2026-09-04T16:14:28.064Z",
   "orcidId": "0000-0001-8684-2417",
   "approved": [
+    {
+      "id": "pub-2026-004",
+      "title": "Half-match recombination drives bridge RNA-guided excision and off-target insertion",
+      "authors": "Xie B, Hu K, Yang H, Patel JE, Ronda C, Rubin BE",
+      "journal": "bioRxiv",
+      "year": 2026,
+      "doi": "10.64898/2026.08.31.748434",
+      "links": {
+        "paper": "https://doi.org/10.64898/2026.08.31.748434"
+      },
+      "preprint": true
+    },
     {
       "id": "pub-2026-003",
       "title": "Canonically minimal RNA-guided insertion sequences expand into large elements that disseminate antimicrobial resistance",
@@ -29,7 +41,7 @@
     {
       "id": "pub-2026-001",
       "title": "Identification of proteins influencing CRISPR-associated transposases for enhanced genome editing",
-      "authors": "Song LCT, Alker ATP, Orom\u00ed-Bosch A, Swartz SE, Martinson JNV, Arora J, Wang AM, Rovinsky R, Smith SJ, Pierce EC, Deutschbauer AM, Doudna JA, Cress BF, Rubin BE",
+      "authors": "Song LCT, Alker ATP, Oromí-Bosch A, Swartz SE, Martinson JNV, Arora J, Wang AM, Rovinsky R, Smith SJ, Pierce EC, Deutschbauer AM, Doudna JA, Cress BF, Rubin BE",
       "journal": "Science Advances",
       "year": 2026,
       "doi": "10.1126/sciadv.aea1429",
