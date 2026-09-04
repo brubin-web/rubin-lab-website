@@ -38,7 +38,7 @@ function stripQuotedReply(comment) {
     // from here down was written by someone else (or by us), not the reviewer.
     const tailMarkers = [
         /^\s*>/,                                   // quoted line
-        /^\s*On\b.*\bwrote:\s*$/i,                 // "On <date>, X wrote:"
+        /^\s*On\b.*\bwrote:/i,                     // "On <date>, X wrote:" (Gmail, Apple Mail)
         /^\s*-{2,}\s*Original Message\s*-{2,}/i,   // Outlook
         /^\s*_{10,}\s*$/,                          // Outlook divider
         /^\s*--\s*$/,                              // signature delimiter
