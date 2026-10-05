@@ -187,6 +187,7 @@
         `;
 
         container.innerHTML = html;
+        document.dispatchEvent(new CustomEvent('publications:rendered'));
     }
 
     /**
