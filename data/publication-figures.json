@@ -1,0 +1,134 @@
+{
+  "figures": {
+    "10.1093/nar/gkaf1198": {
+      "status": "available",
+      "src": "/images/publication-previews/origen-graphical-abstract.jpg",
+      "width": 691,
+      "height": 211,
+      "label": "Graphical abstract",
+      "caption": "OriGen learns plasmid origins of replication, generates new sequences, and tests their function.",
+      "alt": "Workflow from plasmid-origin database construction through OriGen sequence generation to experimental growth measurements.",
+      "attribution": "Irvine et al. (2025), graphical abstract.",
+      "sourceUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12663086/",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "additionalCredit": "",
+      "modifications": "Unmodified figure; scaled to fit the preview without cropping."
+    },
+    "10.1126/sciadv.aea1429": {
+      "status": "available",
+      "src": "/images/publication-previews/cast-figure-1.jpg",
+      "width": 738,
+      "height": 333,
+      "label": "Figure 1",
+      "caption": "A genome-wide screen identifies host proteins that influence CAST integration.",
+      "alt": "A barcoded mutant-library screening workflow and a heatmap of genes that activate or inhibit CAST integration.",
+      "attribution": "Song et al. (2026), Fig. 1.",
+      "sourceUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12757027/",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "additionalCredit": "Schematic created in BioRender by A. T. P. Alker (2025): https://biorender.com/j90j989.",
+      "modifications": "Unmodified figure; scaled to fit the preview without cropping."
+    },
+    "10.1038/s41467-023-43279-y": {
+      "status": "available",
+      "src": "/images/publication-previews/infant-microbiome-figure-6.jpg",
+      "width": 778,
+      "height": 535,
+      "label": "Figure 6",
+      "caption": "Community members can enable Bifidobacterium breve to use nutrients it cannot access alone.",
+      "alt": "Conceptual comparison showing how Ruminococcus gnavus supports Bifidobacterium breve by breaking down 2’-fucosyllactose.",
+      "attribution": "Lou et al. (2023), Fig. 6.",
+      "sourceUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10654741/",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "additionalCredit": "Figure created with BioRender.",
+      "modifications": "Unmodified figure; scaled to fit the preview without cropping."
+    },
+    "10.1038/s41467-020-15384-9": {
+      "status": "available",
+      "src": "/images/publication-previews/competence-figure-5.png",
+      "width": 685,
+      "height": 412,
+      "label": "Figure 5",
+      "caption": "Natural transformation peaks when darkness overlaps the circadian competence window.",
+      "alt": "Four plots comparing transformation efficiency across circadian time and light–dark schedules.",
+      "attribution": "Taton et al., Nature Communications 11, 1688 (2020), Fig. 5.",
+      "sourceUrl": "https://www.nature.com/articles/s41467-020-15384-9/figures/5",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "additionalCredit": "",
+      "modifications": "Unmodified figure; scaled to fit the preview without cropping."
+    },
+    "10.1371/journal.pgen.1007301": {
+      "status": "available",
+      "src": "/images/publication-previews/cdiamp-figure-3.jpg",
+      "width": 615,
+      "height": 1045,
+      "label": "Figure 3",
+      "caption": "IRB-Seq uses barcoded double-mutant libraries to reveal genetic interactions.",
+      "alt": "Three-panel schematic of barcoded mutant sequencing, interaction screening and sensitized screens under light–dark cycles.",
+      "attribution": "Rubin et al., PLOS Genetics 14(4): e1007301 (2018), Fig. 3.",
+      "sourceUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5897029/",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "additionalCredit": "",
+      "modifications": "Unmodified figure; scaled to fit the preview without cropping."
+    },
+    "10.64898/2026.08.31.748434": {
+      "status": "unavailable",
+      "title": "Half-match recombination drives bridge RNA-guided excision and off-target insertion",
+      "reason": "Representative asset and reuse permission still under review. Show paper details and the original paper link."
+    },
+    "10.64898/2026.08.14.744561": {
+      "status": "unavailable",
+      "title": "Canonically minimal RNA-guided insertion sequences expand into large elements that disseminate antimicrobial resistance",
+      "reason": "Representative asset and reuse permission still under review. Show paper details and the original paper link."
+    },
+    "10.64898/2026.02.10.705089": {
+      "status": "unavailable",
+      "title": "Plasmids weaponize conjugation to eliminate non-permissive recipients",
+      "reason": "Representative asset and reuse permission still under review. Show paper details and the original paper link."
+    },
+    "10.1038/s41564-021-01014-7": {
+      "status": "unavailable",
+      "title": "Species- and site-specific genome editing in complex bacterial communities",
+      "reason": "Representative asset and reuse permission still under review. Show paper details and the original paper link."
+    },
+    "10.1016/j.tim.2018.11.002": {
+      "status": "unavailable",
+      "title": "A Hard Day's Night: Cyanobacteria in Diel Cycles",
+      "reason": "Representative asset and reuse permission still under review. Show paper details and the original paper link."
+    },
+    "10.1073/pnas.1802940115": {
+      "status": "unavailable",
+      "title": "Genome-wide fitness assessment during diurnal growth reveals an expanded role of the cyanobacterial circadian clock protein KaiA",
+      "reason": "Representative asset and reuse permission still under review. Show paper details and the original paper link."
+    },
+    "10.1038/s41586-018-0124-0": {
+      "status": "unavailable",
+      "title": "Mutant phenotypes for thousands of bacterial genes of unknown function",
+      "reason": "Representative asset and reuse permission still under review. Show paper details and the original paper link."
+    },
+    "10.1073/pnas.1613078114": {
+      "status": "unavailable",
+      "title": "Redox crisis underlies conditional light-dark lethality in cyanobacterial mutants that lack the circadian regulator, RpaA",
+      "reason": "Representative asset and reuse permission still under review. Show paper details and the original paper link."
+    },
+    "10.1073/pnas.1613446113": {
+      "status": "unavailable",
+      "title": "Unique attributes of cyanobacterial metabolism revealed by improved genome-scale metabolic modeling and essential gene analysis",
+      "reason": "Representative asset and reuse permission still under review. Show paper details and the original paper link."
+    },
+    "10.1073/pnas.1519220112": {
+      "status": "unavailable",
+      "title": "The essential gene set of a photosynthetic organism",
+      "reason": "Representative asset and reuse permission still under review. Show paper details and the original paper link."
+    },
+    "10.1073/pnas.1504576112": {
+      "status": "unavailable",
+      "title": "The circadian oscillator in Synechococcus elongatus controls metabolite partitioning during diurnal growth",
+      "reason": "Representative asset and reuse permission still under review. Show paper details and the original paper link."
+    }
+  }
+}
