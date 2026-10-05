@@ -86,11 +86,31 @@
         panel.style.width = Math.min(420, width - margin * 2) + 'px';
         panel.style.maxHeight = Math.max(100, height - margin * 2) + 'px';
         const bounds = panel.getBoundingClientRect();
-        const left = Math.max(margin, Math.min(anchor.left, width - bounds.width - margin));
+        let left = Math.max(margin, Math.min(anchor.left, width - bounds.width - margin));
         const below = anchor.bottom + 8;
         const above = anchor.top - bounds.height - 8;
-        const top = below + bounds.height <= height - margin ? below :
-            (above >= margin ? above : Math.max(margin, height - bounds.height - margin));
+        let top;
+        if (active.pinned && width <= 600) {
+            // Explicit mobile activation gives the figure and credits room to read.
+            top = Math.max(margin, Math.min(below, height - bounds.height - margin));
+        } else if (below + bounds.height <= height - margin) top = below;
+        else if (above >= margin) top = above;
+        else if (anchor.right + 8 + bounds.width <= width - margin) {
+            // Keep the title itself clickable when the panel cannot fit vertically.
+            left = anchor.right + 8;
+            top = Math.max(margin, Math.min(anchor.top, height - bounds.height - margin));
+        } else if (anchor.left - 8 - bounds.width >= margin) {
+            left = anchor.left - 8 - bounds.width;
+            top = Math.max(margin, Math.min(anchor.top, height - bounds.height - margin));
+        } else {
+            const belowSpace = height - margin - below;
+            const aboveSpace = anchor.top - margin - 8;
+            const available = Math.max(belowSpace, aboveSpace);
+            if (available >= 160) {
+                panel.style.maxHeight = available + 'px';
+                top = belowSpace >= aboveSpace ? below : margin;
+            } else top = Math.max(margin, height - bounds.height - margin);
+        }
         panel.style.left = left + 'px';
         panel.style.top = top + 'px';
     }
@@ -184,6 +204,11 @@
         entry.button.setAttribute('aria-expanded', 'true');
         entry.link.setAttribute('aria-describedby', [entry.description, 'paper-preview-summary'].filter(Boolean).join(' '));
         panel.hidden = false;
+        const anchorBounds = anchor.getBoundingClientRect();
+        if (anchorBounds.bottom < 0 || anchorBounds.top > window.innerHeight) {
+            // Keyboard focus can arrive before the page's smooth scroll finishes.
+            anchor.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'instant' });
+        }
         positionPreview();
         if (pinned) close.focus({ preventScroll: true });
     }
@@ -206,7 +231,15 @@
             const article = link.closest('.publication-item');
             const holder = article && article.querySelector('.publication-links');
             if (holder) holder.appendChild(button);
-            else link.closest('li').append(' ', button);
+            else if (article) {
+                const links = element('div', 'publication-links');
+                links.appendChild(button);
+                article.appendChild(links);
+            } else {
+                const item = link.closest('li');
+                if (!item) return;
+                item.append(' ', button);
+            }
 
             link.addEventListener('pointerenter', function(event) {
                 if (event.pointerType === 'touch' || !hoverMedia.matches) return;
@@ -257,6 +290,7 @@
     })).then(function(data) {
         papers = new Map(data[0].approved.map(function(paper) { return [paper.doi.toLowerCase(), paper]; }));
         figures = data[1].figures || {};
+        createPanel();
         enhanceLinks();
     }).catch(function(error) {
         // Paper links remain fully usable if preview metadata is unavailable.

@@ -1226,7 +1226,7 @@ ul {
 }
 
 /* ============================================
-   News Page
+   On-demand Publication Figure Previews
    ============================================ */
 .publication-preview-note {
     margin: calc(-1 * var(--spacing-lg)) 0 var(--spacing-xl);
@@ -1342,6 +1342,17 @@ ul {
     text-underline-offset: 0.15em;
 }
 
+@media (hover: none) {
+    .paper-preview-toggle,
+    .paper-preview-close {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}
+
+/* ============================================
+   News Page
+   ============================================ */
 .news-archive {
     max-width: 900px;
     margin: 0 auto;
