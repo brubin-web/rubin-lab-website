@@ -1,7 +1,19 @@
 {
-  "lastUpdated": "2026-09-04T16:19:33.747Z",
+  "lastUpdated": "2026-11-02T19:27:04.182Z",
   "orcidId": "0000-0001-8684-2417",
   "approved": [
+    {
+      "id": "pub-2026-005",
+      "title": "DNA defense systems become a fitness liability during plasmid conjugation",
+      "authors": "Martinson JNV, Song LCT, Rubin BE",
+      "journal": "Nucleic Acids Research",
+      "year": 2026,
+      "doi": "10.1093/nar/gkag1043",
+      "links": {
+        "paper": "https://doi.org/10.1093/nar/gkag1043"
+      },
+      "pmid": "42953961"
+    },
     {
       "id": "pub-2026-004",
       "title": "Half-match recombination drives bridge RNA-guided excision and off-target insertion",
@@ -41,7 +53,7 @@
     {
       "id": "pub-2026-001",
       "title": "Identification of proteins influencing CRISPR-associated transposases for enhanced genome editing",
-      "authors": "Song LCT, Alker ATP, Orom\u00ed-Bosch A, Swartz SE, Martinson JNV, Arora J, Wang AM, Rovinsky R, Smith SJ, Pierce EC, Deutschbauer AM, Doudna JA, Cress BF, Rubin BE",
+      "authors": "Song LCT, Alker ATP, Oromí-Bosch A, Swartz SE, Martinson JNV, Arora J, Wang AM, Rovinsky R, Smith SJ, Pierce EC, Deutschbauer AM, Doudna JA, Cress BF, Rubin BE",
       "journal": "Science Advances",
       "year": 2026,
       "doi": "10.1126/sciadv.aea1429",
