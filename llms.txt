@@ -53,12 +53,14 @@ community.
    editing systems for efficient modification of microbes in the human gut, to
    establish the causal role of microbial genes in health and disease and to
    shift medical intervention from antibiotics toward targeted DNA editing.
-5. **Machine Learning for Next-Generation Editing Tools.** Using large language
+5. **AI-Designed Editing Plasmids.** Using large language
    models trained on natural mobile genetic elements to discover and engineer
    new DNA editing systems with user-defined properties, and to find highly
    divergent editing systems that could overcome current limits of the
    CRISPR-Cas toolset. The work connects large microbial genomic datasets, ML
    architectures, and experimental validation in diverse bacterial hosts.
+6. **Next-Generation Editing Tools.** Description forthcoming; see
+   https://www.therubinlab.org/research#editing-tools for updates.
 
 ## People
 
