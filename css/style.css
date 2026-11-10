@@ -364,6 +364,8 @@ ul {
     border-radius: var(--border-radius-lg);
     box-shadow: var(--shadow-md);
     transition: var(--transition);
+    display: flex;
+    flex-direction: column;
 }
 
 .research-card:hover {
@@ -409,6 +411,25 @@ ul {
     transform: scale(1.05);
 }
 
+/* Next-Generation Editing Tools: the artwork has a wide white margin, so
+   zoom it 1.25x (as on the Research page), clipped inside the gray frame. */
+.research-card-image-zoom {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.research-card-image .research-card-image-zoom img {
+    transform: translateX(2.75%) scale(1.25);
+}
+
+.research-card:hover .research-card-image .research-card-image-zoom img {
+    transform: translateX(2.75%) scale(1.3);
+}
+
 .research-card-title {
     font-size: var(--font-size-lg);
     font-weight: 600;
@@ -423,6 +444,8 @@ ul {
 }
 
 .research-card-link {
+    margin-top: auto;
+    align-self: flex-start;
     font-weight: 600;
     font-size: var(--font-size-sm);
     display: inline-flex;
