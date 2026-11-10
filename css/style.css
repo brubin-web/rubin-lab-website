@@ -364,6 +364,8 @@ ul {
     border-radius: var(--border-radius-lg);
     box-shadow: var(--shadow-md);
     transition: var(--transition);
+    display: flex;
+    flex-direction: column;
 }
 
 .research-card:hover {
@@ -423,6 +425,8 @@ ul {
 }
 
 .research-card-link {
+    margin-top: auto;
+    align-self: flex-start;
     font-weight: 600;
     font-size: var(--font-size-sm);
     display: inline-flex;
