@@ -808,7 +808,12 @@ ul {
 
 /* Next-Generation Editing Tools: the artwork has a wide white margin, so
    zoom it within the standard image box (box size and file unchanged). */
+#editing-tools .research-detail-image {
+    background: transparent;
+}
+
 #editing-tools .research-detail-image img {
+    mix-blend-mode: multiply;
     transform: translateX(2.75%) scale(1.25);
 }
 
