@@ -813,6 +813,10 @@ ul {
 }
 
 #editing-tools .research-detail-image img {
+    display: block;
+    aspect-ratio: auto;
+    max-height: none;
+    object-fit: contain;
     mix-blend-mode: multiply;
     transform: translateX(2.75%) scale(1.25);
 }
