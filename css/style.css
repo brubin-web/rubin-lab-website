@@ -1124,6 +1124,14 @@ ul {
     margin-top: var(--spacing-xs);
 }
 
+/* Alumni subsections reuse .team-subsection / .team-subsection-title;
+   constrain them to the alumni grid's width so headings align with the cards. */
+.alumni-subsection {
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 /* Alumni List (legacy) */
 .alumni-list {
     max-width: 700px;
